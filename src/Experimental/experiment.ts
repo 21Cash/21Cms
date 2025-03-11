@@ -46,9 +46,11 @@ type AttendanceData = {
   totalClassesAttended: number;
   attendancePercentage: number;
   absentOn: string[];
+  graphData: { subject: string; attendance: number }[];
 };
 
 const getAttendanceData = async (page: Page): Promise<AttendanceData> => {
+  // Wait for the basic attendance data to load
   await page.waitForSelector("#lblworkingdays");
 
   const totalClassesHeld = await page.$eval("#lblworkingdays", (el) =>
@@ -70,12 +72,61 @@ const getAttendanceData = async (page: Page): Promise<AttendanceData> => {
       .split("<br>")
   );
 
+  console.log("Extracting graph iframe URL...");
+
+  // Extract the URL from the iframe element
+  const iframeUrl = await page.$eval("#iframe_atten_report", (el) =>
+    (el as HTMLIFrameElement).getAttribute("src")
+  );
+
+  if (!iframeUrl) {
+    throw new Error("Graph iframe URL not found.");
+  }
+
+  // Build the full URL if necessary
+  // For example, if the URL is relative, we need to add the base URL.
+  const baseUrl = page.url();
+  const graphUrl = new URL(iframeUrl, baseUrl).toString();
+
+  console.log(`Navigating to graph URL: ${graphUrl}`);
+
+  // Navigate to the graph URL
+  await page.goto(graphUrl, { waitUntil: "networkidle2" });
+
+  // Wait for the graph container to load
+  await page.waitForSelector(".visualize-labels-x li");
+
+  console.log("Graph container loaded. Extracting graph data...");
+
+  // Extract graph data from the chart labels
+  const graphData = await page.evaluate(() => {
+    const items: { subject: string; attendance: number }[] = [];
+    const liElements = document.querySelectorAll(".visualize-labels-x li");
+    liElements.forEach((li) => {
+      const labelSpan = li.querySelector(".label");
+      if (labelSpan && labelSpan.textContent) {
+        const text = labelSpan.textContent.trim();
+        // Match text like "U18MH601(14)"
+        const regex = /^([A-Za-z0-9_]+)\((\d+)\)$/;
+        const match = text.match(regex);
+        if (match) {
+          items.push({
+            subject: match[1],
+            attendance: parseInt(match[2], 10),
+          });
+        }
+      }
+    });
+    return items;
+  });
+
   return {
     name,
     totalClassesHeld,
     totalClassesAttended,
     attendancePercentage,
     absentOn,
+    graphData,
   };
 };
 
