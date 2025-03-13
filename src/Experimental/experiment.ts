@@ -40,14 +40,19 @@ const gotoAttendancePage = async (page: Page) => {
   }
 };
 
-type AttendanceData = {
+interface AttendanceData {
   name: string;
   totalClassesHeld: number;
   totalClassesAttended: number;
   attendancePercentage: number;
-  absentOn: string[];
+  absentClasses: {
+    startTime: Date;
+    endTime: Date;
+    classesCount: number;
+    courseCode: string;
+  }[];
   coursesData: { course: string; classesHeld: number }[];
-};
+}
 
 const getAttendanceData = async (page: Page): Promise<AttendanceData> => {
   await page.waitForSelector("#lblworkingdays");
@@ -70,6 +75,40 @@ const getAttendanceData = async (page: Page): Promise<AttendanceData> => {
       .join("")
       .split("<br>")
   );
+
+  const absentClasses = absentOn
+    .map((item) => {
+      const regex =
+        /^([^()]+)\(([\d:]+\s?[AP]M)-([\d:]+\s?[AP]M) on (\d{2}\/\d{2}\/\d{4})\)$/;
+      const match = item.match(regex);
+      if (match) {
+        const course = match[1].trim();
+        const startTimeStr = match[2].trim();
+        const endTimeStr = match[3].trim();
+        const dateStr = match[4].trim();
+        // Convert dd/mm/yyyy to mm/dd/yyyy for Date parsing.
+        const [day, month, year] = dateStr.split("/");
+        const convertedDate = `${month}/${day}/${year}`;
+        const startTime = new Date(`${convertedDate} ${startTimeStr}`);
+        const endTime = new Date(`${convertedDate} ${endTimeStr}`);
+        const diff = (endTime.getTime() - startTime.getTime()) / 60000;
+        const classesCount = diff / 50;
+
+        return {
+          startTime,
+          endTime,
+          classesCount,
+          courseCode: course,
+        };
+      }
+      return null;
+    })
+    .filter((item) => item !== null) as {
+    startTime: Date;
+    endTime: Date;
+    classesCount: number;
+    courseCode: string;
+  }[];
 
   console.log("Extracting graph iframe URL...");
 
@@ -109,7 +148,6 @@ const getAttendanceData = async (page: Page): Promise<AttendanceData> => {
         }
       }
     });
-
     return items;
   });
 
@@ -124,7 +162,7 @@ const getAttendanceData = async (page: Page): Promise<AttendanceData> => {
     totalClassesHeld,
     totalClassesAttended,
     attendancePercentage,
-    absentOn,
+    absentClasses, // using the new absentClasses array with Date objects
     coursesData,
   };
 };
