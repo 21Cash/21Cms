@@ -13,7 +13,7 @@ interface AttendanceData {
     classesCount: number;
     courseCode: string;
   }[];
-  coursesData: { course: string; classesHeld: number }[];
+  coursesData: { course: string; classesHeld: number; classPresent: number }[];
 }
 
 const gotoAttendancePage = async (page: Page): Promise<Page | null> => {
@@ -31,26 +31,18 @@ const fetchAttendanceData = async (
   username: string,
   password: string
 ): Promise<AttendanceData> => {
-  // Login into CMS
   let page = await loginIntoCMS(username, password);
-
   if (!page) {
     throw new Error(
       `Failed to login with username: ${username} and password: ${password}`
     );
   }
-
-  // Navigate to Attendance page
   page = await gotoAttendancePage(page);
-
   if (!page) {
     throw new Error(`Failed to navigate to attendance page`);
   }
-
-  // Extract attendance data
   try {
     await page.waitForSelector("#lblworkingdays");
-
     const totalClassesHeld = await page.$eval("#lblworkingdays", (el) =>
       parseInt((el as HTMLElement).innerText.trim())
     );
@@ -69,7 +61,6 @@ const fetchAttendanceData = async (
         .join("")
         .split("<br>")
     );
-
     const absentClasses = absentOn
       .map((item) => {
         const regex =
@@ -80,14 +71,12 @@ const fetchAttendanceData = async (
           const startTimeStr = match[2].trim();
           const endTimeStr = match[3].trim();
           const dateStr = match[4].trim();
-          // Convert dd/mm/yyyy to mm/dd/yyyy for Date parsing.
           const [day, month, year] = dateStr.split("/");
           const convertedDate = `${month}/${day}/${year}`;
           const startTime = new Date(`${convertedDate} ${startTimeStr}`);
           const endTime = new Date(`${convertedDate} ${endTimeStr}`);
           const diff = (endTime.getTime() - startTime.getTime()) / 60000;
           const classesCount = diff / 50;
-
           return {
             startTime,
             endTime,
@@ -103,28 +92,16 @@ const fetchAttendanceData = async (
       classesCount: number;
       courseCode: string;
     }[];
-
-    console.log("Extracting graph iframe URL...");
-
     const iframeUrl = await page.$eval("#iframe_atten_report", (el) =>
       (el as HTMLIFrameElement).getAttribute("src")
     );
-
     if (!iframeUrl) {
       throw new Error("Graph iframe URL not found.");
     }
-
     const baseUrl = page.url();
     const graphUrl = new URL(iframeUrl, baseUrl).toString();
-
-    console.log(`Navigating to graph URL: ${graphUrl}`);
-
     await page.goto(graphUrl, { waitUntil: "networkidle2" });
-
     await page.waitForSelector(".visualize-labels-x li");
-
-    console.log("Graph container loaded. Extracting graph data...");
-
     const coursesDataWithDuplicates = await page.evaluate(() => {
       const items: { course: string; classesHeld: number }[] = [];
       const liElements = document.querySelectorAll(".visualize-labels-x li");
@@ -144,13 +121,22 @@ const fetchAttendanceData = async (
       });
       return items;
     });
-
-    const coursesData = Array.from(
+    const dedupedCoursesData = Array.from(
       new Map(
         coursesDataWithDuplicates.map((item) => [item.course, item])
       ).values()
     );
-
+    const coursesData = dedupedCoursesData.map((courseItem) => {
+      const totalAbsent = absentClasses.reduce((acc, absentItem) => {
+        return absentItem.courseCode === courseItem.course
+          ? acc + absentItem.classesCount
+          : acc;
+      }, 0);
+      return {
+        ...courseItem,
+        classPresent: courseItem.classesHeld - totalAbsent,
+      };
+    });
     return {
       name,
       totalClassesHeld,
