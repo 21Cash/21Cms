@@ -13,7 +13,11 @@ interface AttendanceData {
     classesCount: number;
     courseCode: string;
   }[];
-  coursesData: { course: string; classesHeld: number; classPresent: number }[];
+  coursesData: {
+    course: string;
+    classesHeld: number;
+    classesPresent: number;
+  }[];
 }
 
 const gotoAttendancePage = async (page: Page): Promise<Page | null> => {
@@ -134,7 +138,7 @@ const fetchAttendanceData = async (
       }, 0);
       return {
         ...courseItem,
-        classPresent: courseItem.classesHeld - totalAbsent,
+        classesPresent: courseItem.classesHeld - totalAbsent,
       };
     });
     return {

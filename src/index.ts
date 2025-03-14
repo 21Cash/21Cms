@@ -2,7 +2,7 @@ import "dotenv/config";
 import puppeteer, { Browser } from "puppeteer";
 import rootRoute from "./routes/root";
 import express from "express";
-import { testMethod } from "./dev-cache/test";
+import { testRootMethod } from "./dev-cache/test";
 
 let browser: Browser;
 let app = express();
@@ -20,7 +20,7 @@ const init = async () => {
   app.use("/", rootRoute);
 
   // Dev Test Methods
-  // testMethod();
+  testRootMethod();
 };
 
 init();
