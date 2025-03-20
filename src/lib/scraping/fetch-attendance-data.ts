@@ -3,7 +3,7 @@ import { cmsUrl } from "../../constants";
 import loginIntoCMS from "./login-cms";
 
 interface AttendanceData {
-  name: string;
+  username: string;
   totalClassesHeld: number;
   totalClassesAttended: number;
   attendancePercentage: number;
@@ -142,7 +142,7 @@ const fetchAttendanceData = async (
       };
     });
     return {
-      name,
+      username: name,
       totalClassesHeld,
       totalClassesAttended,
       attendancePercentage,

@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1741947125023,
+      "tag": "0000_mean_madame_web",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1742100614747,
+      "tag": "0001_glorious_mulholland_black",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1742102638589,
+      "tag": "0002_known_corsair",
+      "breakpoints": true
+    }
+  ]
+}

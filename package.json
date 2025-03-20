@@ -7,7 +7,11 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ts-node src/index.ts",
     "build": "tsc",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "db:generate": "pnpm drizzle-kit generate --config src/database/drizzle.config.ts",
+    "db:migrate": "npx drizzle-kit migrate --config src/database/drizzle.config.ts",
+    "db:dropmigration": "npx drizzle-kit drop --config src/database/drizzle.config.ts",
+    "db:studio": "npx drizzle-kit studio --config src/database/drizzle.config.ts"
   },
   "keywords": [],
   "author": "",
@@ -15,12 +19,16 @@
   "devDependencies": {
     "@types/express": "^5.0.0",
     "@types/node": "^22.13.10",
+    "drizzle-kit": "^0.30.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.2"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^0.10.4",
     "dotenv": "^16.4.7",
+    "drizzle-orm": "^0.40.0",
     "express": "^4.21.2",
+    "pg": "^8.14.1",
     "puppeteer": "^24.4.0"
   }
 }
