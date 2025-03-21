@@ -22,6 +22,13 @@
       "when": 1742102638589,
       "tag": "0002_known_corsair",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1742546144621,
+      "tag": "0003_open_the_professor",
+      "breakpoints": true
     }
   ]
 }

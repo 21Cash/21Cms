@@ -29,14 +29,13 @@ const tryLogin = async (
   await page.click("#btnsubmit");
 
   try {
-    await page.waitForSelector("#tr1My", { timeout: 5000 });
-    const username = await page.$eval("#lblreportdate", (el) =>
+    await page.waitForSelector("#lblname", { timeout: 5000 });
+    const username = await page.$eval("#lblname", (el) =>
       (el as HTMLElement).innerText.trim()
     );
     return { userId, password, username };
   } catch (error) {
-    console.log("Login failed or timed out");
-    return null;
+    throw new Error("Failed to Login or Login timedout");
   }
 };
 

@@ -31,9 +31,17 @@ const getCoursesDeltaInfo = ({
   const absentClasses: AbsentClass[] = [];
   const presentClasses: PresentClass[] = [];
 
+  console.log(prevCourseData);
+  console.log(currentCourseData);
+
   currentCourseData.forEach((current) => {
-    const prev = prevCourseData.find((p) => p.course === current.course);
-    if (!prev) return;
+    const prev =
+      !prevCourseData || prevCourseData.length === 0
+        ? {
+            classesHeld: 0,
+            classesPresent: 0,
+          }
+        : prevCourseData.find((p) => p.course === current.course);
 
     const heldDiff = current.classesHeld - prev.classesHeld;
     const presentDiff = current.classesPresent - prev.classesPresent;

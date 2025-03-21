@@ -1,24 +1,28 @@
 import { db } from "../db";
 import { courseDeltaInfos } from "../schema";
 
-interface CourseDeltaInfoProps {
+interface CourseDeltaInfosProps {
   userId: string;
   date: Date;
   courseCode: string;
-  delta: number;
+  presentDelta: number;
+  absentDelta: number;
 }
+[];
 
 const regiserCourseDeltaInfo = async ({
   userId,
   date,
   courseCode,
-  delta,
-}: CourseDeltaInfoProps) => {
+  presentDelta,
+  absentDelta,
+}: CourseDeltaInfosProps) => {
   const courseDeltaInfo = {
     userId,
     date: date.toISOString(),
     courseCode,
-    delta,
+    presentDelta,
+    absentDelta,
   };
 
   const result = await db

@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
   pgTable,
   text,
@@ -8,6 +9,7 @@ import {
   uuid,
   primaryKey,
   index,
+  unique,
 } from "drizzle-orm/pg-core";
 
 // USERS
@@ -35,10 +37,14 @@ export const fullAttendanceInfos = pgTable(
     date: date("date").notNull(),
     totalClassesHeld: smallint("total_classes_held").notNull(),
     totalClassesPresent: smallint("total_classes_present").notNull(),
-    attendancePercent: doublePrecision("attendance_percent").notNull(),
+    attendancePercentage: doublePrecision("attendance_percent").notNull(),
   },
   (table) => [
     index("full_attendance_infos_user_date_idx").on(table.userId, table.date),
+    unique("full_attendance_infos_user_date_unique").on(
+      table.userId,
+      table.date
+    ),
   ]
 );
 
@@ -67,10 +73,60 @@ export const courseDeltaInfos = pgTable(
     courseCode: text("course_code")
       .notNull()
       .references(() => courses.courseCode),
-    delta: smallint("delta").notNull(),
+    presentDelta: smallint("delta").notNull(),
+    absentDelta: smallint("delta").default(0).notNull(),
   },
   (table) => [
-    // Composite PK on (user_id, date, course_code) using new syntax
     primaryKey({ columns: [table.userId, table.date, table.courseCode] }),
+    unique("course_delta_infos_unique_on_userId_coursecode_date").on(
+      table.userId,
+      table.date,
+      table.courseCode
+    ),
   ]
+);
+
+/// RELATIONS
+export const usersRelations = relations(users, ({ many }) => ({
+  fullAttendanceInfos: many(fullAttendanceInfos),
+  courseDeltaInfos: many(courseDeltaInfos),
+}));
+
+export const fullAttendanceInfosRelations = relations(
+  fullAttendanceInfos,
+  ({ one, many }) => ({
+    user: one(users, {
+      fields: [fullAttendanceInfos.userId],
+      references: [users.userId],
+    }),
+    courseAttendanceInfos: many(courseAttendanceInfos),
+  })
+);
+
+export const courseAttendanceInfosRelations = relations(
+  courseAttendanceInfos,
+  ({ one }) => ({
+    fullAttendanceInfo: one(fullAttendanceInfos, {
+      fields: [courseAttendanceInfos.fullAttendanceId],
+      references: [fullAttendanceInfos.id],
+    }),
+    course: one(courses, {
+      fields: [courseAttendanceInfos.courseCode],
+      references: [courses.courseCode],
+    }),
+  })
+);
+
+export const courseDeltaInfosRelations = relations(
+  courseDeltaInfos,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [courseDeltaInfos.userId],
+      references: [users.userId],
+    }),
+    course: one(courses, {
+      fields: [courseDeltaInfos.courseCode],
+      references: [courses.courseCode],
+    }),
+  })
 );

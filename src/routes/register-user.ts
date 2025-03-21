@@ -16,18 +16,9 @@ router.post("/", async (req: Request, res: Response) => {
     console.log(
       `Trying to register: UserId: ${userId} username: ${username} password: ${password}`
     );
-
-    console.log(`Validating user Credentials`);
-    const loginSuccess = await tryLogin(userId, password);
-    if (!loginSuccess) {
-      res.status(401).json({ error: "Invalid credentials" });
-      return;
-    }
     const result = await registerUserHandler({ userId, username, password });
     res.status(201).json(result);
   } catch (err) {
-    console.error(err);
-    console.log(`Body: ${JSON.stringify(req.body)}`);
     res
       .status(500)
       .json({ error: "Internal server error", msg: `${err.message}` });
