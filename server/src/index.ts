@@ -28,9 +28,6 @@ const init = async () => {
     "/trigger-full-attendance-update-on-all",
     triggerFullAttendanceUpdateOnAllRoute
   );
-
-  // Dev Test Methods
-  testRootMethod();
 };
 
 init();
