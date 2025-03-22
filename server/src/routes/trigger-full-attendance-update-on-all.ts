@@ -9,7 +9,7 @@ router.get("/", async (req: Request, res: Response) => {
   try {
     const secretKey = req.query.secretKey as string;
     await triggerFullAttendanceUpdateAllHandler({ secretKey });
-    res.status(300).json({
+    res.status(200).json({
       msg: "Action triggered for full attendance Update on all users",
     });
   } catch (err) {
