@@ -7,7 +7,7 @@ const router = Router();
 
 router.post("/", async (req: Request, res: Response) => {
   try {
-    const { secretKey } = req.body;
+    const secretKey = req.query.secretKey as string;
     await triggerFullAttendanceUpdateAllHandler({ secretKey });
     res.status(300).json({
       msg: "Action triggered for full attendance Update on all users",
