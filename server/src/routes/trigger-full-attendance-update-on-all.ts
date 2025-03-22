@@ -5,7 +5,7 @@ import { triggerFullAttendanceUpdateAllHandler } from "../handlers/trigger-full-
 
 const router = Router();
 
-router.post("/", async (req: Request, res: Response) => {
+router.get("/", async (req: Request, res: Response) => {
   try {
     const secretKey = req.query.secretKey as string;
     await triggerFullAttendanceUpdateAllHandler({ secretKey });
