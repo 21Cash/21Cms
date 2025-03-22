@@ -2,7 +2,6 @@ import "dotenv/config";
 import puppeteer, { Browser } from "puppeteer";
 import rootRoute from "./routes/root";
 import express from "express";
-import { testRootMethod } from "./dev-cache/test";
 import registerUserRoute from "./routes/register-user";
 import triggerFullAttendanceUpdateOnAllRoute from "./routes/trigger-full-attendance-update-on-all";
 import { port as runPort, useHeadlessBrowser } from "./constants";
