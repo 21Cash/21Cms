@@ -1,5 +1,5 @@
 import { Request, Response, Router } from "express";
-import { addUser } from "../database/queries/register-user";
+import { addUser } from "../database/queries/non-select queries/register-user";
 import registerUserHandler from "../handlers/register-user-handler";
 import tryLogin from "../lib/scraping/try-login";
 

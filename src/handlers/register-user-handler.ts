@@ -1,4 +1,7 @@
-import { addUser, UserProps } from "../database/queries/register-user";
+import {
+  addUser,
+  UserProps,
+} from "../database/queries/non-select queries/register-user";
 import tryLogin from "../lib/scraping/try-login";
 
 const registerUserHandler = async (userProps: UserProps) => {

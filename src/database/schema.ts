@@ -12,21 +12,27 @@ import {
   unique,
 } from "drizzle-orm/pg-core";
 
+// ─────────────────────────────────────────────────────────────────────────────
 // USERS
+// ─────────────────────────────────────────────────────────────────────────────
 export const users = pgTable("users", {
   userId: text("user_id").primaryKey(),
   username: text("username"),
   password: text("password").notNull(),
-  lastRefresh: timestamp("last_refresh", { withTimezone: true }),
+  lastRefreshed: timestamp("last_refresh", { mode: "date" }).notNull(),
 });
 
+// ─────────────────────────────────────────────────────────────────────────────
 // COURSES
+// ─────────────────────────────────────────────────────────────────────────────
 export const courses = pgTable("courses", {
   courseCode: text("course_code").primaryKey(),
   courseName: text("course_name"),
 });
 
+// ─────────────────────────────────────────────────────────────────────────────
 // FULL ATTENDANCE INFOS
+// ─────────────────────────────────────────────────────────────────────────────
 export const fullAttendanceInfos = pgTable(
   "full_attendance_infos",
   {
@@ -48,48 +54,36 @@ export const fullAttendanceInfos = pgTable(
   ]
 );
 
+// ─────────────────────────────────────────────────────────────────────────────
 // COURSE ATTENDANCE INFOS
-export const courseAttendanceInfos = pgTable("course_attendance_infos", {
-  attendanceInfoId: uuid("attendance_info_id").defaultRandom().primaryKey(),
-  fullAttendanceId: uuid("full_attendance_id")
-    .notNull()
-    .references(() => fullAttendanceInfos.id),
-  courseCode: text("course_code")
-    .notNull()
-    .references(() => courses.courseCode),
-  classesHeld: smallint("classes_held").notNull(),
-  classesPresent: smallint("classes_present").notNull(),
-  courseAttendancePercentage: doublePrecision("course_attendance").notNull(),
-});
-
-// COURSE DELTA INFOS
-export const courseDeltaInfos = pgTable(
-  "course_delta_infos",
+// ─────────────────────────────────────────────────────────────────────────────
+export const courseAttendanceInfos = pgTable(
+  "course_attendance_infos",
   {
-    userId: text("user_id")
+    fullAttendanceInfoId: uuid("full_attendance_info_id")
       .notNull()
-      .references(() => users.userId),
-    date: date("date").notNull(),
+      .references(() => fullAttendanceInfos.id),
     courseCode: text("course_code")
       .notNull()
       .references(() => courses.courseCode),
-    presentDelta: smallint("delta").notNull(),
-    absentDelta: smallint("delta").default(0).notNull(),
+    classesHeld: smallint("classes_held").notNull(),
+    classesPresent: smallint("classes_present").notNull(),
+    presentDelta: smallint("present_delta").notNull(),
+    absentDelta: smallint("absent_delta").notNull(),
+    courseAttendancePercentage: doublePrecision(
+      "course_attendance_percentage"
+    ).notNull(),
   },
   (table) => [
-    primaryKey({ columns: [table.userId, table.date, table.courseCode] }),
-    unique("course_delta_infos_unique_on_userId_coursecode_date").on(
-      table.userId,
-      table.date,
-      table.courseCode
-    ),
+    primaryKey({ columns: [table.fullAttendanceInfoId, table.courseCode] }),
   ]
 );
 
-/// RELATIONS
+// ─────────────────────────────────────────────────────────────────────────────
+// RELATIONS
+// ─────────────────────────────────────────────────────────────────────────────
 export const usersRelations = relations(users, ({ many }) => ({
   fullAttendanceInfos: many(fullAttendanceInfos),
-  courseDeltaInfos: many(courseDeltaInfos),
 }));
 
 export const fullAttendanceInfosRelations = relations(
@@ -107,25 +101,11 @@ export const courseAttendanceInfosRelations = relations(
   courseAttendanceInfos,
   ({ one }) => ({
     fullAttendanceInfo: one(fullAttendanceInfos, {
-      fields: [courseAttendanceInfos.fullAttendanceId],
+      fields: [courseAttendanceInfos.fullAttendanceInfoId],
       references: [fullAttendanceInfos.id],
     }),
     course: one(courses, {
       fields: [courseAttendanceInfos.courseCode],
-      references: [courses.courseCode],
-    }),
-  })
-);
-
-export const courseDeltaInfosRelations = relations(
-  courseDeltaInfos,
-  ({ one }) => ({
-    user: one(users, {
-      fields: [courseDeltaInfos.userId],
-      references: [users.userId],
-    }),
-    course: one(courses, {
-      fields: [courseDeltaInfos.courseCode],
       references: [courses.courseCode],
     }),
   })

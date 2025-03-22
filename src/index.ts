@@ -4,16 +4,18 @@ import rootRoute from "./routes/root";
 import express from "express";
 import { testRootMethod } from "./dev-cache/test";
 import registerUserRoute from "./routes/register-user";
+import triggerFullAttendanceUpdateOnAllRoute from "./routes/trigger-full-attendance-update-on-all";
+import { port as runPort, useHeadlessBrowser } from "./constants";
 
 let browser: Browser;
 let app = express();
 app.use(express.json());
 
 const init = async () => {
-  const isHeadless = process.env.BROWSER_IS_HEADLESS === "true";
+  const isHeadless = useHeadlessBrowser;
   browser = await puppeteer.launch({ headless: isHeadless });
 
-  const port = process.env.PORT || 3000;
+  const port = runPort || 3000;
 
   app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
@@ -22,6 +24,10 @@ const init = async () => {
   // Routes
   app.use("/", rootRoute);
   app.use("/register-user", registerUserRoute);
+  app.use(
+    "/trigger-full-attendance-update-on-all",
+    triggerFullAttendanceUpdateOnAllRoute
+  );
 
   // Dev Test Methods
   testRootMethod();

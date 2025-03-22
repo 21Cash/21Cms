@@ -4,7 +4,6 @@ import {
   courses,
   fullAttendanceInfos,
   courseAttendanceInfos,
-  courseDeltaInfos,
 } from "./schema";
 
 // USERS table
@@ -23,10 +22,6 @@ type NewFullAttendanceInfo = InferInsertModel<typeof fullAttendanceInfos>;
 type CourseAttendanceInfo = InferSelectModel<typeof courseAttendanceInfos>;
 type NewCourseAttendanceInfo = InferInsertModel<typeof courseAttendanceInfos>;
 
-// COURSE DELTA INFOS table
-type CourseDeltaInfo = InferSelectModel<typeof courseDeltaInfos>;
-type NewCourseDeltaInfo = InferInsertModel<typeof courseDeltaInfos>;
-
 export {
   User,
   NewUser,
@@ -36,6 +31,4 @@ export {
   NewFullAttendanceInfo,
   CourseAttendanceInfo,
   NewCourseAttendanceInfo,
-  CourseDeltaInfo,
-  NewCourseDeltaInfo,
 };

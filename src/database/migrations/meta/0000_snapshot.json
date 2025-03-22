@@ -1,9 +1,219 @@
 {
-  "id": "a0d7c577-c72b-4a76-a9dc-3c3f1ea6556d",
+  "id": "f5e0d3dd-373f-4d76-89f7-83443ee195dd",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
+    "public.course_attendance_infos": {
+      "name": "course_attendance_infos",
+      "schema": "",
+      "columns": {
+        "full_attendance_info_id": {
+          "name": "full_attendance_info_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "course_code": {
+          "name": "course_code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "classes_held": {
+          "name": "classes_held",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "classes_present": {
+          "name": "classes_present",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "present_delta": {
+          "name": "present_delta",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "absent_delta": {
+          "name": "absent_delta",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "course_attendance_percentage": {
+          "name": "course_attendance_percentage",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "course_attendance_infos_full_attendance_info_id_full_attendance_infos_id_fk": {
+          "name": "course_attendance_infos_full_attendance_info_id_full_attendance_infos_id_fk",
+          "tableFrom": "course_attendance_infos",
+          "tableTo": "full_attendance_infos",
+          "columnsFrom": [
+            "full_attendance_info_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "course_attendance_infos_course_code_courses_course_code_fk": {
+          "name": "course_attendance_infos_course_code_courses_course_code_fk",
+          "tableFrom": "course_attendance_infos",
+          "tableTo": "courses",
+          "columnsFrom": [
+            "course_code"
+          ],
+          "columnsTo": [
+            "course_code"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "course_attendance_infos_full_attendance_info_id_course_code_pk": {
+          "name": "course_attendance_infos_full_attendance_info_id_course_code_pk",
+          "columns": [
+            "full_attendance_info_id",
+            "course_code"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.courses": {
+      "name": "courses",
+      "schema": "",
+      "columns": {
+        "course_code": {
+          "name": "course_code",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "course_name": {
+          "name": "course_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.full_attendance_infos": {
+      "name": "full_attendance_infos",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "date": {
+          "name": "date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "total_classes_held": {
+          "name": "total_classes_held",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "total_classes_present": {
+          "name": "total_classes_present",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "attendance_percent": {
+          "name": "attendance_percent",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "full_attendance_infos_user_date_idx": {
+          "name": "full_attendance_infos_user_date_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "date",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "full_attendance_infos_user_id_users_user_id_fk": {
+          "name": "full_attendance_infos_user_id_users_user_id_fk",
+          "tableFrom": "full_attendance_infos",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "user_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "full_attendance_infos_user_date_unique": {
+          "name": "full_attendance_infos_user_date_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "user_id",
+            "date"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.users": {
       "name": "users",
       "schema": "",
@@ -19,6 +229,18 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false
+        },
+        "password": {
+          "name": "password",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "last_refresh": {
+          "name": "last_refresh",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},

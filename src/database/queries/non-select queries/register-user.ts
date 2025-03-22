@@ -1,6 +1,6 @@
-import { db } from "../db";
-import { User } from "../db-types";
-import { users } from "../schema";
+import { db } from "../../db";
+import { User } from "../../db-types";
+import { users } from "../../schema";
 
 interface UserProps {
   userId: string;
@@ -21,7 +21,7 @@ const addUser = async ({
 
   const result = await db
     .insert(users)
-    .values(user)
+    .values({ ...user, lastRefreshed: new Date() })
     .onConflictDoNothing()
     .returning();
 
