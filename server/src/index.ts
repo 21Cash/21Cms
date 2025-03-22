@@ -4,7 +4,11 @@ import rootRoute from "./routes/root";
 import express from "express";
 import registerUserRoute from "./routes/register-user";
 import triggerFullAttendanceUpdateOnAllRoute from "./routes/trigger-full-attendance-update-on-all";
-import { port as runPort, useHeadlessBrowser } from "./constants";
+import {
+  chromeExecutablePath,
+  port as runPort,
+  useHeadlessBrowser,
+} from "./constants";
 
 let browser: Browser;
 let app = express();
@@ -12,7 +16,10 @@ app.use(express.json());
 
 const init = async () => {
   const isHeadless = useHeadlessBrowser;
-  browser = await puppeteer.launch({ headless: isHeadless });
+  browser = await puppeteer.launch({
+    headless: isHeadless,
+    executablePath: chromeExecutablePath,
+  });
 
   const port = runPort || 3000;
 
