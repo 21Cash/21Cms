@@ -1,12 +1,15 @@
-import { Button } from "./components/ui/button";
+import { Link } from "react-router-dom";
+import AppRoutes from "./routes";
 
-function App() {
+const App = () => {
   return (
     <>
-      Beans are cute Below is button from shadcn
-      <Button>ShadCN Button </Button>
+      <nav>
+        <Link to="/">Home</Link> | <Link to="/about">About</Link>
+      </nav>
+      <AppRoutes />
     </>
   );
-}
+};
 
 export default App;
