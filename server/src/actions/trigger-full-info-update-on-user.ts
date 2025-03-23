@@ -21,6 +21,7 @@ import {
 import { register } from "module";
 import { registerCourses } from "../database/queries/non-select queries/register-courses";
 import { setUserLastRefresh } from "../database/queries/non-select queries/set-user-last-refresh";
+import { getPrevCoursesDataForDate } from "../database/queries/select-queries/get-prev-courses-data-for-date";
 
 interface FullInfoUpdateProps {
   userId: string;
@@ -40,19 +41,13 @@ const triggerFullInfoUpdateOnUser = async ({
 
   const password = (await GetUserInfo(userId)).password;
 
-  // Getting Previous Day Courses Data
-  const prevDayDate = new Date();
-  prevDayDate.setDate(triggerDate.getDate() - 1);
-
-  const prevDayAttendanceInfo = await getFullAttendanceInfo({
-    userId,
-    date: prevDayDate,
-  });
-
+  // Fetch Current day stats
   const currentDayAttendanceData = await fetchAttendanceData(userId, password);
-  const prevDayCoursesInfo = await getCoursesInfoByDate({
+
+  // Getting Previous Day Courses Data
+  const prevDayCoursesInfo = await getPrevCoursesDataForDate({
     userId,
-    dateString: getPostgresqlDateStringIST(prevDayDate),
+    dateInUTC: triggerDate,
   });
 
   // Upserting Full Attendance Info

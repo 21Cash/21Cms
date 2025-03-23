@@ -40,7 +40,7 @@ export const fullAttendanceInfos = pgTable(
     userId: text("user_id")
       .notNull()
       .references(() => users.userId),
-    date: date("date").notNull(),
+    date: date("date").notNull(), // According to IST
     totalClassesHeld: smallint("total_classes_held").notNull(),
     totalClassesPresent: smallint("total_classes_present").notNull(),
     attendancePercentage: doublePrecision("attendance_percent").notNull(),
