@@ -1,12 +1,12 @@
-import { Link } from "react-router-dom";
 import AppRoutes from "./routes";
+import Navbar from "./components/navbar";
+import DebugComponent from "./dev-cache/debug-component";
 
 const App = () => {
   return (
     <>
-      <nav>
-        <Link to="/">Home</Link> | <Link to="/about">About</Link>
-      </nav>
+      <Navbar />
+      <DebugComponent />
       <AppRoutes />
     </>
   );
