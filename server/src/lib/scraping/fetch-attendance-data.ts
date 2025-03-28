@@ -138,10 +138,11 @@ const fetchAttendanceData = async (
       }, 0);
       return {
         ...courseItem,
-        classesPresent: courseItem.classesHeld - totalAbsent,
+        classesPresent: Math.floor(courseItem.classesHeld - totalAbsent),
       };
     });
-    return {
+
+    const attendanceData = {
       username: name,
       totalClassesHeld,
       totalClassesAttended,
@@ -149,8 +150,12 @@ const fetchAttendanceData = async (
       absentClasses,
       coursesData,
     };
+
+    await page.close();
+    return attendanceData;
   } catch (error) {
     console.log("Failed to extract attendance data");
+    await page.close();
     throw error;
   }
 };

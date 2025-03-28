@@ -1,6 +1,7 @@
 import { getAllUserIds } from "../database/queries/select-queries/get-all-user-ids";
 import { triggerFullInfoUpdateOnUser } from "./trigger-full-info-update-on-user";
 
+// TODO: If a attendance update fails on user, then write failed date, time, and userId to database
 const triggerFullInfoUpdateOnAll = async () => {
   const userIds = await getAllUserIds();
   const triggeredDate = new Date();

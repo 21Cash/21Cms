@@ -9,6 +9,7 @@ import {
   port as runPort,
   useHeadlessBrowser,
 } from "./constants";
+import { DebugRootMethod } from "./dev-cache/debug-root";
 
 let browser: Browser;
 let app = express();
@@ -34,6 +35,10 @@ const init = async () => {
     "/trigger-full-attendance-update-on-all",
     triggerFullAttendanceUpdateOnAllRoute
   );
+
+  // Call Debug Methods
+  DebugRootMethod();
+  
 };
 
 init();
