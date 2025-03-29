@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "./components/theme-provider";
+import { Toaster } from "sonner";
 
 interface ProvidersProps {
   children: ReactNode;
@@ -9,7 +10,10 @@ interface ProvidersProps {
 const Providers = ({ children }: ProvidersProps) => {
   return (
     <BrowserRouter>
-      <ThemeProvider>{children}</ThemeProvider>
+      <ThemeProvider>
+        {children}
+        <Toaster />
+      </ThemeProvider>
     </BrowserRouter>
   );
 };
