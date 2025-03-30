@@ -5,6 +5,7 @@ const useHeadlessBrowser = process.env.USE_HEADLESS_BROWSER === "true";
 const port = process.env.PORT;
 const databaseURL = process.env.DATABASE_URL;
 const chromeExecutablePath = process.env.CHROME_EXECUTABLE_PATH;
+const frontendUrl = process.env.FRONTEND_URL;
 export {
   cmsUrl,
   adminSecretKey,
@@ -12,4 +13,5 @@ export {
   port,
   databaseURL,
   chromeExecutablePath,
+  frontendUrl,
 };

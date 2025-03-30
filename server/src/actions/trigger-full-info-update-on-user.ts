@@ -31,7 +31,7 @@ interface FullInfoUpdateProps {
 // TODO: Process PrevDayData and Upsert courseDeltaInfos
 const triggerFullInfoUpdateOnUser = async ({
   userId,
-  triggerDate,
+  triggerDate, // In UTC
 }: FullInfoUpdateProps) => {
   if (!userId) {
     throw new Error("userId is required");
@@ -85,6 +85,12 @@ const triggerFullInfoUpdateOnUser = async ({
       classesPresent: courseData.classesPresent,
     })),
   });
+
+  console.log(`PrevDay Data: ${JSON.stringify(prevDayCoursesInfo, null, 2)}`);
+  console.log(
+    `CurrentDay Data: ${JSON.stringify(currentDayCoursesData, null, 2)}`
+  );
+  console.log(`Deltas: ${JSON.stringify(coursesDeltaInfos, null, 2)}`);
 
   const currentDayAttendanceInfos: CourseAttendanceInfoProps = {
     fullAttendanceInfoId,

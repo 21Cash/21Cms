@@ -16,7 +16,12 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { backendUrl } from "@/constants";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 import { useState } from "react";
+import { useParams } from "react-router-dom";
+import { UserDashboardData } from "@shared/types/api-types";
 
 const placeHolderPropsData = {
   attendancePercentage: 83.33,
@@ -26,22 +31,29 @@ const placeHolderPropsData = {
   totalClassesHeld: 400,
 };
 
+const fetchAttendanceDashboardData = async (userId: string) => {
+  const response = await axios.get(`${backendUrl}/get-user-dashboard-data`, {
+    params: { userId },
+  });
+  const data: UserDashboardData = response.data;
+  console.log(data);
+  return data;
+};
+
 export function AttendanceView() {
+  const { userId } = useParams<{ userId: string }>();
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [viewingDayInfo, setViewingDayInfo] = useState<boolean>(false);
   const [viewingDashboard, setViewingDashboard] = useState<boolean>(true);
-  const [attendancePercentage, setAttendancePercentage] = useState<number>(
-    placeHolderPropsData.attendancePercentage
-  );
-  const [totalClassesPresent, setTotalClassesPresent] = useState<number>(
-    placeHolderPropsData.totalClassesPresent
-  );
-  const [totalClassesAbsent, setTotalClassesAbsent] = useState<number>(
-    placeHolderPropsData.totalClassesAbsent
-  );
-  const [totalClassesHeld, setTotalClassesHeld] = useState<number>(
-    placeHolderPropsData.totalClassesHeld
-  );
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["attendance", userId],
+    queryFn: () => fetchAttendanceDashboardData(userId!),
+    enabled: !!userId,
+  });
+
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>Error fetching data</div>;
 
   return (
     <SidebarProvider>
@@ -68,10 +80,24 @@ export function AttendanceView() {
 
         {viewingDashboard && (
           <AttendanceDashboard
-            attendancePercentage={attendancePercentage}
-            totalClassesPresent={totalClassesPresent}
-            totalClassesAbsent={totalClassesAbsent}
-            totalClassesHeld={totalClassesHeld}
+            attendancePercentage={data?.attendancePercentage ?? 0}
+            totalClassesPresent={data?.totalClassesPresent ?? 0}
+            totalClassesAbsent={data?.totalClassesAbsent ?? 0}
+            totalClassesHeld={data?.totalClassesHeld ?? 0}
+            coursesData={
+              data?.todaysCoursesData.map((course) => ({
+                courseName: course.courseName,
+                courseCode: course.courseCode,
+                courseAttendancePercent: parseFloat(
+                  course.courseAttendancePercentage.toFixed(2)
+                ),
+                courseClassesHeld: course.classesHeld,
+                courseClassesPresent: course.classesPresent,
+                courseClassesAbsent: course.classesHeld - course.classesPresent,
+                coursePresentDelta: course.presentDelta,
+                courseAbsentDelta: course.absentDelta,
+              })) ?? []
+            }
           />
         )}
 

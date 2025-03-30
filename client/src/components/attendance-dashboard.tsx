@@ -6,7 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { AttendanceChart } from "./attendance-chart";
-import { CoursesDetailsTableWithDummyData } from "./courses-details-table";
+import { Course, CoursesDetailsTable } from "./courses-details-table";
 
 interface InfoCardProps {
   title: string;
@@ -39,6 +39,7 @@ interface AttendanceDashboardProps {
   totalClassesAbsentText?: string;
   totalClassesHeld: number;
   totalClassesHeldText?: string;
+  coursesData: Course[];
 }
 
 export function AttendanceDashboard({
@@ -50,6 +51,7 @@ export function AttendanceDashboard({
   totalClassesAbsentText = "No of Classes Absent",
   totalClassesHeld,
   totalClassesHeldText = "Total No of Classes held",
+  coursesData,
 }: AttendanceDashboardProps) {
   return (
     <div className="flex flex-1 flex-col">
@@ -85,7 +87,7 @@ export function AttendanceDashboard({
         </div>
         {/* Course Details table */}
         <div className="px-6 py-5">
-          <CoursesDetailsTableWithDummyData />
+          <CoursesDetailsTable courses={coursesData} />
         </div>
       </div>
     </div>

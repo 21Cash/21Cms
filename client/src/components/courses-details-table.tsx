@@ -7,13 +7,15 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-interface Course {
+export interface Course {
   courseName: string;
   courseCode?: string;
   courseAttendancePercent: number;
   courseClassesHeld: number;
   courseClassesPresent: number;
   courseClassesAbsent: number;
+  coursePresentDelta: number;
+  courseAbsentDelta: number;
 }
 
 interface CoursesDetailsTableProps {
@@ -49,34 +51,4 @@ export function CoursesDetailsTable({ courses }: CoursesDetailsTableProps) {
       </Table>
     </div>
   );
-}
-
-const dummyCourses: Course[] = [
-  {
-    courseName: "Mathematics",
-    courseCode: "MATH101",
-    courseAttendancePercent: 85,
-    courseClassesHeld: 40,
-    courseClassesPresent: 34,
-    courseClassesAbsent: 6,
-  },
-  {
-    courseName: "Physics",
-    courseAttendancePercent: 78,
-    courseClassesHeld: 45,
-    courseClassesPresent: 35,
-    courseClassesAbsent: 10,
-  },
-  {
-    courseName: "Computer Science",
-    courseCode: "CS102",
-    courseAttendancePercent: 92,
-    courseClassesHeld: 50,
-    courseClassesPresent: 46,
-    courseClassesAbsent: 4,
-  },
-];
-
-export function CoursesDetailsTableWithDummyData() {
-  return <CoursesDetailsTable courses={dummyCourses} />;
 }

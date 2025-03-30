@@ -1,6 +1,10 @@
 import { and, eq } from "drizzle-orm";
 import { db } from "../../db";
-import { courseAttendanceInfos, fullAttendanceInfos } from "../../schema";
+import {
+  courseAttendanceInfos,
+  courses,
+  fullAttendanceInfos,
+} from "../../schema";
 
 interface GetCoursesInfoProps {
   userId: string;
@@ -33,8 +37,22 @@ const getCoursesInfoByDate = async ({
   }
 
   const coursesInfos = await db
-    .select()
+    .select({
+      fullAttendanceInfoId: courseAttendanceInfos.fullAttendanceInfoId,
+      courseCode: courseAttendanceInfos.courseCode,
+      classesHeld: courseAttendanceInfos.classesHeld,
+      classesPresent: courseAttendanceInfos.classesPresent,
+      presentDelta: courseAttendanceInfos.presentDelta,
+      absentDelta: courseAttendanceInfos.absentDelta,
+      courseAttendancePercentage:
+        courseAttendanceInfos.courseAttendancePercentage,
+      courseName: courses.courseName,
+    })
     .from(courseAttendanceInfos)
+    .innerJoin(
+      courses,
+      eq(courseAttendanceInfos.courseCode, courses.courseCode)
+    )
     .where(eq(courseAttendanceInfos.fullAttendanceInfoId, fullAttendanceId));
 
   return coursesInfos;

@@ -6,9 +6,13 @@ import registerUserRoute from "./routes/register-user";
 import triggerFullAttendanceUpdateOnAllRoute from "./routes/trigger-full-attendance-update-on-all";
 import {
   chromeExecutablePath,
+  frontendUrl,
   port as runPort,
   useHeadlessBrowser,
 } from "./constants";
+import cors from "cors";
+import getUserDashboardDataRoute from "./routes/get-user-dashboard-data";
+import { DebugRootMethod } from "./dev-cache/debug-root";
 
 let browser: Browser;
 let app = express();
@@ -20,6 +24,14 @@ const init = async () => {
     headless: isHeadless,
     executablePath: chromeExecutablePath,
   });
+
+  app.use(
+    cors({
+      origin: frontendUrl,
+      methods: ["GET", "POST", "PUT", "DELETE"],
+      allowedHeaders: ["Content-Type", "Authorization"],
+    })
+  );
 
   const port = runPort || 3000;
 
@@ -34,9 +46,10 @@ const init = async () => {
     "/trigger-full-attendance-update-on-all",
     triggerFullAttendanceUpdateOnAllRoute
   );
+  app.use("/get-user-dashboard-data", getUserDashboardDataRoute);
 
   // Call Debug Methods
-  // DebugRootMethod();
+  DebugRootMethod();
 };
 
 init();
