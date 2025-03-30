@@ -6,6 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { AttendanceChart } from "./attendance-chart";
+import { CoursesDetailsTableWithDummyData } from "./courses-details-table";
 
 interface InfoCardProps {
   title: string;
@@ -78,10 +79,13 @@ export function AttendanceDashboard({
             />
           </div>
         </div>
-
         {/* Attendance Chart */}
         <div className="px-6">
           <AttendanceChart />
+        </div>
+        {/* Course Details table */}
+        <div className="px-6 py-5">
+          <CoursesDetailsTableWithDummyData />
         </div>
       </div>
     </div>

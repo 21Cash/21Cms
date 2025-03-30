@@ -1,6 +1,9 @@
 import { AppSidebar } from "@/components/app-sidebar";
 import { AttendanceDashboard } from "@/components/attendance-dashboard";
-import { AttendanceDayView } from "@/components/attendance-day-view";
+import {
+  AttendanceDayView,
+  AttendanceDayViewWrapper,
+} from "@/components/attendance-day-view";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -55,22 +58,15 @@ export function AttendanceView() {
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
-                <BreadcrumbPage>October 2024</BreadcrumbPage>
+                <BreadcrumbPage>
+                  {viewingDashboard ? "Dashboard" : "Day Attendance View"}
+                </BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
         </header>
 
         {viewingDashboard && (
-          // <div className="flex flex-1 flex-col gap-4 p-4">
-          //   Dashboard
-          //   <div className="grid auto-rows-min gap-4 md:grid-cols-5">
-          //     {Array.from({ length: 20 }).map((_, i) => (
-          //       <div key={i} className="aspect-square rounded-xl bg-muted/50" />
-          //     ))}
-          //   </div>
-          // </div>
-
           <AttendanceDashboard
             attendancePercentage={attendancePercentage}
             totalClassesPresent={totalClassesPresent}
@@ -80,9 +76,9 @@ export function AttendanceView() {
         )}
 
         {viewingDayInfo && (
-          <>
-            <AttendanceDayView />
-          </>
+          <div className="p-6">
+            <AttendanceDayViewWrapper />
+          </div>
         )}
       </SidebarInset>
     </SidebarProvider>

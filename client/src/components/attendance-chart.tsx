@@ -1,6 +1,3 @@
-"use client";
-
-import * as React from "react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 import {
@@ -25,6 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useState } from "react";
 
 const attendanceData = [
   { date: "2024-04-01", attendance: 78.78 },
@@ -49,7 +47,7 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function AttendanceChart() {
-  const [timeRange, setTimeRange] = React.useState("90d");
+  const [timeRange, setTimeRange] = useState("90d");
 
   const referenceDate = new Date(
     Math.max(...attendanceData.map((item) => new Date(item.date).getTime()))
@@ -136,7 +134,7 @@ export function AttendanceChart() {
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              domain={[60, 100]} // Adjust the lower bound to reduce empty space
+              domain={[60, 100]} // y-range
             />
             <ChartTooltip
               cursor={false}
