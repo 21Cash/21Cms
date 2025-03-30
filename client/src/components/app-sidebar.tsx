@@ -7,39 +7,12 @@ import { NavUser } from "@/components/nav-user";
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarRail,
   SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { Button } from "./ui/button";
 import { Calendar } from "./ui/calendar";
-
-// This is sample data.
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  calendars: [
-    {
-      name: "My Calendars",
-      items: ["Personal", "Work", "Family"],
-    },
-    {
-      name: "Favorites",
-      items: ["Holidays", "Birthdays"],
-    },
-    {
-      name: "Other",
-      items: ["Travel", "Reminders", "Deadlines"],
-    },
-  ],
-};
+import { Link } from "react-router-dom";
 
 export function AppSidebar({
   selectedDate,
@@ -55,9 +28,13 @@ export function AppSidebar({
 }) {
   return (
     <Sidebar {...props}>
-      <SidebarHeader className="border-sidebar-border h-16 border-b">
-        <NavUser user={data.user} />
-      </SidebarHeader>
+      <Link to="/">
+        <a>
+          <SidebarHeader className="border-sidebar-border h-16 border-b flex items-center justify-center cursor-pointer transform transition-transform duration-200 hover:scale-105">
+            <span className="text-center text-3xl font-bold">21CMS</span>
+          </SidebarHeader>
+        </a>
+      </Link>
       <SidebarContent>
         <Calendar
           mode="single"

@@ -2,6 +2,7 @@ import { it } from "node:test";
 import { GetUserInfo } from "../database/queries/select-queries/get-user-info";
 import { getFullAttendanceInfo } from "../database/queries/select-queries/get-full-attendance-info";
 import { getCoursesInfoByDate } from "../database/queries/select-queries/get-courses-infos-on-date";
+import { getAttendanceHistoryData } from "../database/queries/select-queries/get-attendance-history-data";
 
 // TODO:
 // Return userId, username, TotalAttendancePercentage, lastRefresh
@@ -11,7 +12,6 @@ import { getCoursesInfoByDate } from "../database/queries/select-queries/get-cou
 const getUserDashboardDataHandler = async (userId: string) => {
   const { username, lastRefreshed } = await GetUserInfo(userId);
   const currentDate = new Date();
-  console.log(`Getting Dashboard Data for ${username}`);
 
   const {
     totalClassesHeld,
@@ -32,7 +32,13 @@ const getUserDashboardDataHandler = async (userId: string) => {
     userId,
     dateString: fullAttendanceDate,
   });
-  console.log(`fullAttendanceId: ${fullAttendanceId}`);
+
+  currentDate.setMonth(currentDate.getMonth() - 3);
+  const attendanceHistoryData = await getAttendanceHistoryData({
+    userId,
+    startDateUTC: currentDate,
+  });
+
   return {
     username,
     lastRefreshed,
@@ -41,6 +47,7 @@ const getUserDashboardDataHandler = async (userId: string) => {
     totalClassesPresent,
     attendancePercentage,
     todaysCoursesData,
+    attendanceHistoryData,
   };
 };
 

@@ -32,9 +32,7 @@ const upsertCourseAttendanceInfos = async ({
     ),
   }));
 
-  console.log(`Trying Upserting Course Attendance Infos`);
-
-  await db
+  const response = await db
     .insert(courseAttendanceInfos)
     .values(coursesData)
     .onConflictDoUpdate({
@@ -49,7 +47,8 @@ const upsertCourseAttendanceInfos = async ({
         absentDelta: sql`EXCLUDED.absent_delta`,
         courseAttendancePercentage: sql`EXCLUDED.course_attendance_percentage`,
       },
-    });
+    })
+    .returning();
 };
 
 export { upsertCourseAttendanceInfos, CourseAttendanceInfoProps };

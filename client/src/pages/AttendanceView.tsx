@@ -1,9 +1,6 @@
 import { AppSidebar } from "@/components/app-sidebar";
 import { AttendanceDashboard } from "@/components/attendance-dashboard";
-import {
-  AttendanceDayView,
-  AttendanceDayViewWrapper,
-} from "@/components/attendance-day-view";
+import { AttendanceDayView } from "@/components/attendance-day-view";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -22,21 +19,13 @@ import axios from "axios";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { UserDashboardData } from "@shared/types/api-types";
-
-const placeHolderPropsData = {
-  attendancePercentage: 83.33,
-  totalClassesPresent: 322,
-  attendancePercentageText: "-4.22% this week",
-  totalClassesAbsent: 32,
-  totalClassesHeld: 400,
-};
+import { ModeToggle } from "@/components/ui/mode-toggle";
 
 const fetchAttendanceDashboardData = async (userId: string) => {
   const response = await axios.get(`${backendUrl}/get-user-dashboard-data`, {
     params: { userId },
   });
   const data: UserDashboardData = response.data;
-  console.log(data);
   return data;
 };
 
@@ -76,6 +65,9 @@ export function AttendanceView() {
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
+          <div className="ml-auto">
+            <ModeToggle />
+          </div>
         </header>
 
         {viewingDashboard && (
@@ -98,12 +90,16 @@ export function AttendanceView() {
                 courseAbsentDelta: course.absentDelta,
               })) ?? []
             }
+            attendanceHistoryData={data?.attendanceHistoryData ?? []}
           />
         )}
 
         {viewingDayInfo && (
-          <div className="p-6">
-            <AttendanceDayViewWrapper />
+          <div className="px-8 py-6">
+            <AttendanceDayView
+              date={selectedDate.toDateString()}
+              userId={userId || ""}
+            />
           </div>
         )}
       </SidebarInset>

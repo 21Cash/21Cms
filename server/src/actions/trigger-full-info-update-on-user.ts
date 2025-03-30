@@ -86,18 +86,12 @@ const triggerFullInfoUpdateOnUser = async ({
     })),
   });
 
-  console.log(`PrevDay Data: ${JSON.stringify(prevDayCoursesInfo, null, 2)}`);
-  console.log(
-    `CurrentDay Data: ${JSON.stringify(currentDayCoursesData, null, 2)}`
-  );
-  console.log(`Deltas: ${JSON.stringify(coursesDeltaInfos, null, 2)}`);
-
   const currentDayAttendanceInfos: CourseAttendanceInfoProps = {
     fullAttendanceInfoId,
     courseInfos: coursesDeltaInfos.map((data) => ({
       courseCode: data.courseCode,
       classesHeld: data.classesHeld,
-      classesPresent: data.presentCount,
+      classesPresent: data.classesPresent,
       presentDelta: data.presentCount,
       absentDelta: data.absentCount,
     })),

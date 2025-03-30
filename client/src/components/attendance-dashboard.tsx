@@ -5,8 +5,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { AttendanceChart } from "./attendance-chart";
+import { AttendanceChart, AttendanceChartProps } from "./attendance-chart";
 import { Course, CoursesDetailsTable } from "./courses-details-table";
+import { useEffect, useState } from "react";
 
 interface InfoCardProps {
   title: string;
@@ -40,19 +41,102 @@ interface AttendanceDashboardProps {
   totalClassesHeld: number;
   totalClassesHeldText?: string;
   coursesData: Course[];
+  attendanceHistoryData: {
+    classesAbsent: number;
+    date: string;
+    classesHeld: number;
+    classesPresent: number;
+    attendancePercentage: number;
+  }[];
 }
 
-export function AttendanceDashboard({
-  attendancePercentage,
-  attendancePercentageText = "Current Attendance Percentage",
-  totalClassesPresent,
-  totalClassesPresentText = "Total Classes Present",
-  totalClassesAbsent,
-  totalClassesAbsentText = "No of Classes Absent",
-  totalClassesHeld,
-  totalClassesHeldText = "Total No of Classes held",
-  coursesData,
-}: AttendanceDashboardProps) {
+const getTodaysInfos = (props: AttendanceDashboardProps) => {
+  const {
+    coursesData,
+    attendancePercentage,
+    totalClassesPresent,
+    totalClassesHeld,
+  } = props;
+
+  const presentDeltaSum = coursesData.reduce(
+    (sum, item) => sum + item.coursePresentDelta,
+    0
+  );
+  const absentDeltaSum = coursesData.reduce(
+    (sum, item) => sum + item.courseAbsentDelta,
+    0
+  );
+  const totalClassesDeltaSum = presentDeltaSum + absentDeltaSum;
+
+  const yesterdayTotalPresent = totalClassesPresent - presentDeltaSum;
+  const yesterdayTotalHeld = totalClassesHeld - totalClassesDeltaSum;
+
+  const yesterdayAttendancePercentage =
+    yesterdayTotalHeld > 0
+      ? (yesterdayTotalPresent / yesterdayTotalHeld) * 100
+      : 0;
+
+  const todayAttendanceDelta =
+    attendancePercentage - yesterdayAttendancePercentage;
+
+  return {
+    presentDeltaSum,
+    absentDeltaSum,
+    totalClassesDeltaSum,
+    todayAttendanceDelta,
+  };
+};
+
+export function AttendanceDashboard(props: AttendanceDashboardProps) {
+  const {
+    attendancePercentage,
+    totalClassesPresent,
+    totalClassesAbsent,
+    totalClassesHeld,
+    coursesData,
+    attendanceHistoryData,
+  } = props;
+
+  useEffect(() => {
+    const {
+      presentDeltaSum,
+      absentDeltaSum,
+      totalClassesDeltaSum,
+      todayAttendanceDelta,
+    } = getTodaysInfos(props);
+
+    if (presentDeltaSum != 0) {
+      setTotalClassesPresentText(`+${presentDeltaSum} classes present today`);
+    }
+    if (absentDeltaSum != 0) {
+      setTotalClassesAbsentText(`${absentDeltaSum} classes absent today`);
+    }
+    if (totalClassesHeld != 0) {
+      setTotalClassesHeldText(`${totalClassesDeltaSum} classes held today`);
+    }
+
+    if (todayAttendanceDelta != 0) {
+      if (todayAttendanceDelta > 0) {
+        setAttendancePercentageText(
+          `Gained +${parseFloat(todayAttendanceDelta.toFixed(2))}% today`
+        );
+      } else {
+        setAttendancePercentageText(
+          `Lost ${parseFloat(todayAttendanceDelta.toFixed(2))}% today`
+        );
+      }
+    }
+  }, [totalClassesHeld, totalClassesAbsent, totalClassesPresent]);
+
+  const [attendancePercentageText, setAttendancePercentageText] =
+    useState<string>("No changes today");
+  const [totalClassesPresentText, setTotalClassesPresentText] =
+    useState<string>("No changes today");
+  const [totalClassesAbsentText, setTotalClassesAbsentText] =
+    useState<string>("No changes today");
+  const [totalClassesHeldText, setTotalClassesHeldText] =
+    useState<string>("No changes today");
+
   return (
     <div className="flex flex-1 flex-col">
       <div className="@container/main flex flex-1 flex-col gap-2">
@@ -83,10 +167,15 @@ export function AttendanceDashboard({
         </div>
         {/* Attendance Chart */}
         <div className="px-6">
-          <AttendanceChart />
+          <AttendanceChart
+            attendanceData={attendanceHistoryData.map((item) => ({
+              date: new Date(item.date),
+              attendance: item.attendancePercentage,
+            }))}
+          />
         </div>
         {/* Course Details table */}
-        <div className="px-6 py-5">
+        <div className="px-6 py-6">
           <CoursesDetailsTable courses={coursesData} />
         </div>
       </div>

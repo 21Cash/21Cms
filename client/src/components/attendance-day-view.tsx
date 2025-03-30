@@ -1,3 +1,4 @@
+import axios from "axios";
 import {
   Card,
   CardContent,
@@ -5,22 +6,49 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { backendUrl } from "@/constants";
+import { useQuery } from "@tanstack/react-query";
 
-type CourseAttendance = {
-  courseName: string;
+export type CoursesData = {
+  fullAttendanceInfoId: string;
+  courseCode: string;
+  classesHeld: number;
+  classesPresent: number;
   presentDelta: number;
   absentDelta: number;
-};
+  courseAttendancePercentage: number;
+  courseName: string;
+}[];
 
 type AttendanceDayViewProps = {
   date: string;
-  courseData: CourseAttendance[];
+  userId: string;
 };
 
-export function AttendanceDayView({
-  date,
-  courseData,
-}: AttendanceDayViewProps) {
+export function AttendanceDayView({ date, userId }: AttendanceDayViewProps) {
+  const { data, error, isLoading } = useQuery<CoursesData>({
+    queryKey: ["coursesData", { userId, dateString: date }],
+    queryFn: async () => {
+      const response = await axios.get<CoursesData>(
+        `${backendUrl}/get-user-courses-data-on-date`,
+        {
+          params: { userId, dateString: date },
+        }
+      );
+      console.log(response.data);
+      return response.data;
+    },
+    enabled: !!userId,
+  });
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error fetching data</div>;
+  }
+
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
@@ -35,42 +63,24 @@ export function AttendanceDayView({
       </CardHeader>
       <CardContent>
         <div className="space-y-2">
-          {courseData.map((course, index) => (
-            <div
-              key={index}
-              className="flex justify-between border-b pb-2 last:border-b-0"
-            >
-              <span>{course.courseName}</span>
-              <span className="flex space-x-4">
-                <span className="text-green-600">+{course.presentDelta}</span>
-                <span className="text-red-600">-{course.absentDelta}</span>
-              </span>
-            </div>
-          ))}
+          {!data || data.length === 0 ? (
+            <div className="text-gray-500">No data found</div>
+          ) : (
+            data.map((course: CoursesData[number], index: number) => (
+              <div
+                key={index}
+                className="flex justify-between border-b pb-2 last:border-b-0"
+              >
+                <span>{course.courseName}</span>
+                <span className="flex space-x-4">
+                  <span className="text-green-600">+{course.presentDelta}</span>
+                  <span className="text-red-600">-{course.absentDelta}</span>
+                </span>
+              </div>
+            ))
+          )}
         </div>
       </CardContent>
     </Card>
-  );
-}
-
-// Dummy data example
-const dummyAttendanceData: AttendanceDayViewProps = {
-  date: "2024-06-15",
-  courseData: [
-    { courseName: "Math 101", presentDelta: 1, absentDelta: 0 },
-    { courseName: "History 201", presentDelta: 0, absentDelta: 1 },
-    { courseName: "Science 301", presentDelta: 1, absentDelta: 0 },
-  ],
-};
-
-// Wrapper component to demonstrate the AttendanceDayView with dummy data.
-export function AttendanceDayViewWrapper() {
-  return (
-    <div className="p-4">
-      <AttendanceDayView
-        date={dummyAttendanceData.date}
-        courseData={dummyAttendanceData.courseData}
-      />
-    </div>
   );
 }

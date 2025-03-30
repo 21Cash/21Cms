@@ -24,29 +24,21 @@ import {
 } from "@/components/ui/select";
 import { useState } from "react";
 
-const attendanceData = [
-  { date: "2024-04-01", attendance: 78.78 },
-  { date: "2024-04-02", attendance: 65.77 },
-  { date: "2024-04-03", attendance: 82.5 },
-  { date: "2024-04-04", attendance: 90 },
-  { date: "2024-04-05", attendance: 75 },
-  { date: "2024-04-06", attendance: 88 },
-  { date: "2024-04-07", attendance: 92 },
-  { date: "2024-04-08", attendance: 84 },
-  { date: "2024-04-09", attendance: 70 },
-  { date: "2024-04-10", attendance: 95 },
-  { date: "2024-04-10", attendance: 70.28 },
-  { date: "2024-04-10", attendance: 68.38 },
-];
-
+export interface AttendanceChartProps {
+  date: Date;
+  attendance: number;
+}
 const chartConfig = {
   attendance: {
     label: "Attendance",
     color: "hsl(var(--chart-1))",
   },
 } satisfies ChartConfig;
-
-export function AttendanceChart() {
+export function AttendanceChart({
+  attendanceData,
+}: {
+  attendanceData: AttendanceChartProps[];
+}) {
   const [timeRange, setTimeRange] = useState("90d");
 
   const referenceDate = new Date(
@@ -71,9 +63,7 @@ export function AttendanceChart() {
       <CardHeader className="flex items-center gap-2 space-y-0 border-b sm:flex-row">
         <div className="grid flex-1 gap-1 text-center sm:text-left">
           <CardTitle>Attendance Percentage</CardTitle>
-          <CardDescription>
-            Showing attendance percentages (typically 50-100%)
-          </CardDescription>
+          <CardDescription>Showing attendance percentage</CardDescription>
         </div>
         <Select value={timeRange} onValueChange={setTimeRange}>
           <SelectTrigger

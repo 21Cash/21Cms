@@ -15,4 +15,22 @@ export type UserDashboardData = {
     courseAttendancePercentage: number;
     courseName: string;
   }[];
+  attendanceHistoryData: {
+    classesAbsent: number;
+    date: string;
+    classesHeld: number;
+    classesPresent: number;
+    attendancePercentage: number;
+  }[];
 };
+
+export type CoursesData = {
+  fullAttendanceInfoId: string;
+  courseCode: string;
+  classesHeld: number;
+  classesPresent: number;
+  presentDelta: number;
+  absentDelta: number;
+  courseAttendancePercentage: number;
+  courseName: string;
+}[];

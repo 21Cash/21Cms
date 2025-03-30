@@ -12,7 +12,7 @@ import {
 } from "./constants";
 import cors from "cors";
 import getUserDashboardDataRoute from "./routes/get-user-dashboard-data";
-import { DebugRootMethod } from "./dev-cache/debug-root";
+import getCoursesDataOnDateRoute from "./routes/get-courses-data-on-date";
 
 let browser: Browser;
 let app = express();
@@ -47,9 +47,9 @@ const init = async () => {
     triggerFullAttendanceUpdateOnAllRoute
   );
   app.use("/get-user-dashboard-data", getUserDashboardDataRoute);
+  app.use("/get-user-courses-data-on-date", getCoursesDataOnDateRoute);
 
   // Call Debug Methods
-  DebugRootMethod();
 };
 
 init();

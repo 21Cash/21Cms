@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { backendUrl } from "@/constants";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const RegisterForm = () => {
   const [rollno, setRollno] = useState("");
@@ -25,7 +26,7 @@ const RegisterForm = () => {
 
     try {
       const response = await axios.post(`${backendUrl}/register-user`, {
-        userId: rollno,
+        userId: rollno.toLowerCase(),
         username,
         password,
       });
@@ -97,6 +98,7 @@ const RegisterForm = () => {
 
 const AttendanceStatsForm = () => {
   const [handle, setHandle] = useState("");
+  const navigate = useNavigate();
 
   return (
     <Card className="bg-gray-800 border border-gray-700 shadow-xl rounded-lg hover:shadow-2xl transition-shadow">
@@ -116,7 +118,9 @@ const AttendanceStatsForm = () => {
             onChange={(e) => setHandle(e.target.value)}
           />
           <Button
-            type="submit"
+            onClick={() => {
+              navigate(`/view/${handle.toLowerCase()}`);
+            }}
             className="w-full bg-gray-600 hover:bg-gray-500 transition-colors py-3"
           >
             View Stats
