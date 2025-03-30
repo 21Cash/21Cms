@@ -71,6 +71,7 @@ export function AppSidebar({
         />
         <SidebarSeparator className="mx-0" />
         <Button
+          className="mx-2 my-1"
           onClick={() => {
             setViewingDashboard(true);
             setViewingDayInfo(false);
