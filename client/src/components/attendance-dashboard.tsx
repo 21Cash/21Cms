@@ -48,44 +48,11 @@ interface AttendanceDashboardProps {
     classesPresent: number;
     attendancePercentage: number;
   }[];
+  presentDeltaToday: number;
+  absentDeltaToday: number;
+  classesHeldDeltaToday: number;
+  attendancePercentageDeltaToday: number;
 }
-
-const getTodaysInfos = (props: AttendanceDashboardProps) => {
-  const {
-    coursesData,
-    attendancePercentage,
-    totalClassesPresent,
-    totalClassesHeld,
-  } = props;
-
-  const presentDeltaSum = coursesData.reduce(
-    (sum, item) => sum + item.coursePresentDelta,
-    0
-  );
-  const absentDeltaSum = coursesData.reduce(
-    (sum, item) => sum + item.courseAbsentDelta,
-    0
-  );
-  const totalClassesDeltaSum = presentDeltaSum + absentDeltaSum;
-
-  const yesterdayTotalPresent = totalClassesPresent - presentDeltaSum;
-  const yesterdayTotalHeld = totalClassesHeld - totalClassesDeltaSum;
-
-  const yesterdayAttendancePercentage =
-    yesterdayTotalHeld > 0
-      ? (yesterdayTotalPresent / yesterdayTotalHeld) * 100
-      : 0;
-
-  const todayAttendanceDelta =
-    attendancePercentage - yesterdayAttendancePercentage;
-
-  return {
-    presentDeltaSum,
-    absentDeltaSum,
-    totalClassesDeltaSum,
-    todayAttendanceDelta,
-  };
-};
 
 export function AttendanceDashboard(props: AttendanceDashboardProps) {
   const {
@@ -95,38 +62,42 @@ export function AttendanceDashboard(props: AttendanceDashboardProps) {
     totalClassesHeld,
     coursesData,
     attendanceHistoryData,
+    presentDeltaToday,
+    absentDeltaToday,
+    classesHeldDeltaToday,
+    attendancePercentageDeltaToday,
   } = props;
 
   useEffect(() => {
-    const {
-      presentDeltaSum,
-      absentDeltaSum,
-      totalClassesDeltaSum,
-      todayAttendanceDelta,
-    } = getTodaysInfos(props);
-
-    if (presentDeltaSum != 0) {
-      setTotalClassesPresentText(`+${presentDeltaSum} classes present today`);
+    if (presentDeltaToday != 0) {
+      setTotalClassesPresentText(`+${presentDeltaToday} classes present today`);
     }
-    if (absentDeltaSum != 0) {
-      setTotalClassesAbsentText(`${absentDeltaSum} classes absent today`);
+    if (absentDeltaToday != 0) {
+      setTotalClassesAbsentText(`${absentDeltaToday} classes absent today`);
     }
     if (totalClassesHeld != 0) {
-      setTotalClassesHeldText(`${totalClassesDeltaSum} classes held today`);
+      setTotalClassesHeldText(`${classesHeldDeltaToday} classes held today`);
     }
 
-    if (todayAttendanceDelta != 0) {
-      if (todayAttendanceDelta > 0) {
+    if (attendancePercentageDeltaToday != 0) {
+      if (attendancePercentageDeltaToday > 0) {
         setAttendancePercentageText(
-          `Gained +${parseFloat(todayAttendanceDelta.toFixed(2))}% today`
+          `Gained +${parseFloat(
+            attendancePercentageDeltaToday.toFixed(2)
+          )}% today`
         );
       } else {
         setAttendancePercentageText(
-          `Lost ${parseFloat(todayAttendanceDelta.toFixed(2))}% today`
+          `Lost ${parseFloat(attendancePercentageDeltaToday.toFixed(2))}% today`
         );
       }
     }
-  }, [totalClassesHeld, totalClassesAbsent, totalClassesPresent]);
+  }, [
+    attendancePercentageDeltaToday,
+    presentDeltaToday,
+    absentDeltaToday,
+    classesHeldDeltaToday,
+  ]);
 
   const [attendancePercentageText, setAttendancePercentageText] =
     useState<string>("No changes today");

@@ -18,7 +18,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { UserDashboardData } from "@shared/types/api-types";
+import { UserDashboardData, UserData } from "@shared/types/api-types";
 import { ModeToggle } from "@/components/ui/mode-toggle";
 
 const fetchAttendanceDashboardData = async (userId: string) => {
@@ -26,6 +26,15 @@ const fetchAttendanceDashboardData = async (userId: string) => {
     params: { userId },
   });
   const data: UserDashboardData = response.data;
+  return data;
+};
+
+const fetchUserData = async (userId: string) => {
+  const response = await axios.get(`${backendUrl}/get-user-data`, {
+    params: { userId },
+  });
+  const data: UserData = response.data;
+  console.log(data);
   return data;
 };
 
@@ -41,8 +50,18 @@ export function AttendanceView() {
     enabled: !!userId,
   });
 
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error fetching data</div>;
+  const {
+    data: userData,
+    isLoading: isUserLoading,
+    isError: isUserError,
+  } = useQuery({
+    queryKey: ["user", userId],
+    queryFn: () => fetchUserData(userId!),
+    enabled: !!userId,
+  });
+
+  if (isLoading || isUserLoading) return <div>Loading...</div>;
+  if (isError || isUserError) return <div>Error fetching data</div>;
 
   return (
     <SidebarProvider>
@@ -51,7 +70,10 @@ export function AttendanceView() {
         setViewingDashboard={setViewingDashboard}
         selectedDate={selectedDate}
         setSelectedDate={setSelectedDate}
+        username={userData?.username ?? ""}
+        lastRefreshed={userData?.lastRefreshed ?? ""}
       />
+
       <SidebarInset>
         <header className="sticky top-0 flex h-16 shrink-0 items-center gap-2 border-b bg-background px-4">
           <SidebarTrigger className="-ml-1" />
@@ -90,6 +112,12 @@ export function AttendanceView() {
                 courseAbsentDelta: course.absentDelta,
               })) ?? []
             }
+            attendancePercentageDeltaToday={
+              data?.attendancePercentageDelta ?? 0
+            }
+            presentDeltaToday={data?.classesPresentDelta ?? 0}
+            absentDeltaToday={data?.classesAbsentDelta ?? 0}
+            classesHeldDeltaToday={data?.classesHeldDelta ?? 0}
             attendanceHistoryData={data?.attendanceHistoryData ?? []}
           />
         )}

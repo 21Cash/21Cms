@@ -5,6 +5,10 @@ export type UserDashboardData = {
   totalClassesHeld: number;
   totalClassesPresent: number;
   attendancePercentage: number;
+  classesPresentDelta: number;
+  classesAbsentDelta: number;
+  classesHeldDelta: number;
+  attendancePercentageDelta: number;
   todaysCoursesData: {
     fullAttendanceInfoId: string;
     courseCode: string;
@@ -34,3 +38,9 @@ export type CoursesData = {
   courseAttendancePercentage: number;
   courseName: string;
 }[];
+
+export type UserData = {
+  userId: string;
+  username: string;
+  lastRefreshed: string;
+};

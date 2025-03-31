@@ -13,6 +13,7 @@ import {
 import cors from "cors";
 import getUserDashboardDataRoute from "./routes/get-user-dashboard-data";
 import getCoursesDataOnDateRoute from "./routes/get-courses-data-on-date";
+import getUserDataRoute from "./routes/get-user-data";
 
 let browser: Browser;
 let app = express();
@@ -48,8 +49,7 @@ const init = async () => {
   );
   app.use("/get-user-dashboard-data", getUserDashboardDataRoute);
   app.use("/get-user-courses-data-on-date", getCoursesDataOnDateRoute);
-
-  // Call Debug Methods
+  app.use("/get-user-data", getUserDataRoute);
 };
 
 init();

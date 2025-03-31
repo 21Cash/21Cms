@@ -11,7 +11,7 @@ interface GetFullAttendanceInfoProps {
 
 const getFullAttendanceInfo = async ({
   userId,
-  date,
+  date, // In UTC
 }: GetFullAttendanceInfoProps) => {
   const fullAttendanceInfo = await db
     .select()

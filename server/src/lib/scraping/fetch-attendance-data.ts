@@ -113,7 +113,7 @@ const fetchAttendanceData = async (
         const labelSpan = li.querySelector(".label");
         if (labelSpan && labelSpan.textContent) {
           const text = labelSpan.textContent.trim();
-          const regex = /^([A-Za-z0-9_]+)\((\d+)\)$/;
+          const regex = /^([\w-]+)\((\d+)\)$/;
           const match = text.match(regex);
           if (match) {
             items.push({
@@ -125,6 +125,7 @@ const fetchAttendanceData = async (
       });
       return items;
     });
+
     const dedupedCoursesData = Array.from(
       new Map(
         coursesDataWithDuplicates.map((item) => [item.course, item])
@@ -152,6 +153,7 @@ const fetchAttendanceData = async (
     };
 
     await page.close();
+
     return attendanceData;
   } catch (error) {
     console.log("Failed to extract attendance data");
