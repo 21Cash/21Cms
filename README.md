@@ -35,5 +35,16 @@
 Feel free to open issues and PRs to enhance the project!
 
 
+# Screenshots
+
+### Dashboard page
+![Screenshot (253)](https://github.com/user-attachments/assets/c6ca52a8-8a5a-4e96-b1f8-ddc759b03c59)
+
+### Charts page
+![Screenshot (254)](https://github.com/user-attachments/assets/50369748-ef39-4329-9709-45520d465d99)
+
+
+
 ⭐ **Star the repo if you like it!**
+
 
