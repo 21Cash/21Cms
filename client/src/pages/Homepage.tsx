@@ -112,13 +112,13 @@ const AttendanceStatsForm = () => {
           View Attendance Stats
         </CardTitle>
         <CardDescription className="text-center">
-          Enter your user handle to check your attendance stats.
+          Enter your roll number to check your attendance stats.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form className="space-y-5" onSubmit={handleSubmit}>
           <Input
-            placeholder="User Handle"
+            placeholder="Roll Number"
             value={handle}
             onChange={(e) => setHandle(e.target.value)}
           />
