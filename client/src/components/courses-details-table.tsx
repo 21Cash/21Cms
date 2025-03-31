@@ -56,7 +56,7 @@ export function CoursesDetailsTable({ courses }: CoursesDetailsTableProps) {
                 <TableCell>
                   {course.courseClassesPresent}
                   {course.coursePresentDelta > 0 && (
-                    <span className="text-green-500">
+                    <span className="text-green-400">
                       {" "}
                       (+{course.coursePresentDelta})
                     </span>
@@ -65,7 +65,7 @@ export function CoursesDetailsTable({ courses }: CoursesDetailsTableProps) {
                 <TableCell>
                   {course.courseClassesAbsent}
                   {course.courseAbsentDelta > 0 && (
-                    <span className="text-red-500">
+                    <span className="text-red-400">
                       {" "}
                       (+{course.courseAbsentDelta})
                     </span>

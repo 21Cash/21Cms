@@ -1,5 +1,4 @@
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
-
 import {
   Card,
   CardContent,
@@ -24,28 +23,35 @@ import {
 } from "@/components/ui/select";
 import { useState } from "react";
 
-export interface AttendanceChartProps {
+export interface AttendanceDataItem {
   date: Date;
   attendance: number;
 }
-const chartConfig = {
+
+export interface AttendanceChartProps {
+  attendanceData: AttendanceDataItem[];
+}
+
+const chartConfig: ChartConfig = {
   attendance: {
     label: "Attendance",
     color: "hsl(var(--chart-1))",
   },
-} satisfies ChartConfig;
-export function AttendanceChart({
-  attendanceData,
-}: {
-  attendanceData: AttendanceChartProps[];
-}) {
+};
+
+export function AttendanceChart({ attendanceData }: AttendanceChartProps) {
+  const formattedData = attendanceData.map((item) => ({
+    ...item,
+    date: new Date(item.date).toISOString(),
+  }));
+
   const [timeRange, setTimeRange] = useState("90d");
 
   const referenceDate = new Date(
-    Math.max(...attendanceData.map((item) => new Date(item.date).getTime()))
+    Math.max(...formattedData.map((item) => new Date(item.date).getTime()))
   );
 
-  const filteredData = attendanceData.filter((item) => {
+  const filteredData = formattedData.filter((item) => {
     const date = new Date(item.date);
     let daysToSubtract = 90;
     if (timeRange === "30d") {
@@ -131,7 +137,8 @@ export function AttendanceChart({
               content={
                 <ChartTooltipContent
                   labelFormatter={(value) => {
-                    return new Date(value).toLocaleDateString("en-US", {
+                    const date = new Date(value);
+                    return date.toLocaleDateString("en-US", {
                       month: "short",
                       day: "numeric",
                     });
