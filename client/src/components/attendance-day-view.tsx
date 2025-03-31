@@ -57,7 +57,7 @@ export function AttendanceDayView({ date, userId }: AttendanceDayViewProps) {
   const totalClassesAbsent = totalClassesHeld - totalClassesPresent;
 
   return (
-    <Card className="w-full max-w-2xl mx-auto p-6">
+    <Card className="w-full max-w-4xl mx-auto p-6">
       <CardHeader>
         <CardTitle className="text-2xl font-bold">
           Day Attendance Info

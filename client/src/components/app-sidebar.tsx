@@ -89,7 +89,6 @@ export function AppSidebar({
             </p>
           </div>
           <div className="-mt-2">
-            {/* Moves calendar slightly up */}
             <Calendar
               mode="single"
               selected={selectedDate}
@@ -98,6 +97,7 @@ export function AppSidebar({
                   setSelectedDate(date);
                   setViewingDayInfo(true);
                   setViewingDashboard(false);
+                  setViewingCharts(false);
                 }
               }}
               className="rounded-md border"

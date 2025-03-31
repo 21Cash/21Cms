@@ -41,7 +41,9 @@ const fetchUserData = async (userId: string) => {
 
 export function AttendanceView() {
   const { userId } = useParams<{ userId: string }>();
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date>(
+    new Date("2025-01-01")
+  );
   const [viewingDayInfo, setViewingDayInfo] = useState<boolean>(false);
   const [viewingDashboard, setViewingDashboard] = useState<boolean>(true);
   const [viewingCharts, setViewingCharts] = useState<boolean>(false);
@@ -78,7 +80,7 @@ export function AttendanceView() {
       />
 
       <SidebarInset>
-        <header className="sticky top-0 flex h-16 shrink-0 items-center gap-2 border-b bg-background px-4">
+        <header className="sticky top-0  z-10 flex h-16 shrink-0 items-center gap-2 border-b bg-background px-4">
           <SidebarTrigger className="-ml-1" />
           <Separator orientation="vertical" className="mr-2 h-4" />
           <Breadcrumb>
@@ -96,7 +98,7 @@ export function AttendanceView() {
             <ModeToggle />
           </div>
         </header>
-        {viewingCharts && <ChartsView />}
+        {viewingCharts && userId && <ChartsView userId={userId} />}
         {viewingDashboard && (
           <AttendanceDashboard
             attendancePercentage={data?.attendancePercentage ?? 0}
