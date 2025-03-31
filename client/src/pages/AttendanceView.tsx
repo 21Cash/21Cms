@@ -20,6 +20,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { UserDashboardData, UserData } from "@shared/types/api-types";
 import { ModeToggle } from "@/components/ui/mode-toggle";
+import { ChartsView } from "@/components/charts-view";
 
 const fetchAttendanceDashboardData = async (userId: string) => {
   const response = await axios.get(`${backendUrl}/get-user-dashboard-data`, {
@@ -43,6 +44,7 @@ export function AttendanceView() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [viewingDayInfo, setViewingDayInfo] = useState<boolean>(false);
   const [viewingDashboard, setViewingDashboard] = useState<boolean>(true);
+  const [viewingCharts, setViewingCharts] = useState<boolean>(false);
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["attendance", userId],
@@ -72,6 +74,7 @@ export function AttendanceView() {
         setSelectedDate={setSelectedDate}
         username={userData?.username ?? ""}
         lastRefreshed={userData?.lastRefreshed ?? ""}
+        setViewingCharts={setViewingCharts}
       />
 
       <SidebarInset>
@@ -81,8 +84,10 @@ export function AttendanceView() {
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
-                <BreadcrumbPage>
-                  {viewingDashboard ? "Dashboard" : "Day Attendance View"}
+                <BreadcrumbPage className="text-2xl">
+                  {viewingDashboard && "Dashboard"}
+                  {viewingCharts && "Charts"}
+                  {viewingDayInfo && "Day Attendance Info"}
                 </BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
@@ -91,7 +96,7 @@ export function AttendanceView() {
             <ModeToggle />
           </div>
         </header>
-
+        {viewingCharts && <ChartsView />}
         {viewingDashboard && (
           <AttendanceDashboard
             attendancePercentage={data?.attendancePercentage ?? 0}

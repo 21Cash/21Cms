@@ -7,6 +7,7 @@ import {
 import { Button } from "./ui/button";
 import { Calendar } from "./ui/calendar";
 import { Link } from "react-router-dom";
+import { useMemo } from "react";
 
 function getTimeElapsedString(lastRefresh: string): string {
   const lastRefreshDate = new Date(lastRefresh);
@@ -51,19 +52,25 @@ export function AppSidebar({
   setSelectedDate,
   setViewingDashboard,
   setViewingDayInfo,
+  setViewingCharts,
   username,
   lastRefreshed,
+
   ...props
 }: React.ComponentProps<typeof Sidebar> & {
   selectedDate: Date;
   setSelectedDate: React.Dispatch<React.SetStateAction<Date>>;
   setViewingDayInfo: React.Dispatch<React.SetStateAction<boolean>>;
   setViewingDashboard: React.Dispatch<React.SetStateAction<boolean>>;
+  setViewingCharts: React.Dispatch<React.SetStateAction<boolean>>;
   username: string;
   lastRefreshed: string;
 }) {
-  const randomMessage =
-    displayText[Math.floor(Math.random() * displayText.length)];
+  const randomMessage = useMemo(
+    () => displayText[Math.floor(Math.random() * displayText.length)],
+    []
+  );
+
   return (
     <Sidebar {...props}>
       <Link to="/">
@@ -82,7 +89,6 @@ export function AppSidebar({
             </p>
           </div>
           <div className="-mt-2">
-            {" "}
             {/* Moves calendar slightly up */}
             <Calendar
               mode="single"
@@ -99,13 +105,25 @@ export function AppSidebar({
           </div>
           <SidebarSeparator className="mx-0 my-3" />
           <Button
-            className="w-full"
+            className="w-[90%] mx-auto mt-2"
             onClick={() => {
               setViewingDashboard(true);
               setViewingDayInfo(false);
+              setViewingCharts(false);
             }}
           >
             Main Dashboard
+          </Button>
+
+          <Button
+            className="mt-5 w-[90%] mx-auto"
+            onClick={() => {
+              setViewingDashboard(false);
+              setViewingDayInfo(false);
+              setViewingCharts(true);
+            }}
+          >
+            Charts
           </Button>
         </div>
         <div className="p-4 border-t border-muted">
