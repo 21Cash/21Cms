@@ -113,7 +113,7 @@ const fetchAttendanceData = async (
         const labelSpan = li.querySelector(".label");
         if (labelSpan && labelSpan.textContent) {
           const text = labelSpan.textContent.trim();
-          const regex = /^([\w-]+)\((\d+)\)$/;
+          const regex = /^(.+)\((\d+)\)$/;
           const match = text.match(regex);
           if (match) {
             items.push({
