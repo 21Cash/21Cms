@@ -69,13 +69,14 @@ export function AttendanceDashboard(props: AttendanceDashboardProps) {
   } = props;
 
   useEffect(() => {
+    console.log(`classesHeldDelta: ${classesHeldDeltaToday}`);
     if (presentDeltaToday != 0) {
       setTotalClassesPresentText(`+${presentDeltaToday} classes present today`);
     }
     if (absentDeltaToday != 0) {
       setTotalClassesAbsentText(`${absentDeltaToday} classes absent today`);
     }
-    if (totalClassesHeld != 0) {
+    if (classesHeldDeltaToday != 0) {
       setTotalClassesHeldText(`${classesHeldDeltaToday} classes held today`);
     }
 
