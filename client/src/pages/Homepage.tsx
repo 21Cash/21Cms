@@ -13,6 +13,9 @@ import { backendUrl } from "@/constants";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { ModeToggle } from "@/components/ui/mode-toggle";
+import { Link } from "react-router-dom";
+import { Footer } from "react-day-picker";
+import { SiteFooter } from "@/components/site-footer";
 
 const RegisterForm = () => {
   const [rollno, setRollno] = useState("");
@@ -134,8 +137,14 @@ export function Homepage() {
   return (
     <div className="min-h-screen flex flex-col px-4 text-foreground bg-gradient-to-br from-gray-100 via-gray-200 to-gray-100 dark:from-black dark:via-gray-900 dark:to-black">
       <header className="p-6 flex justify-between items-center">
-        <div className="text-3xl font-bold tracking-tight">21CMS</div>
+        <div className="text-3xl font-bold tracking-tight">
+          <Link to="">21CMS</Link>
+        </div>
         <div className="flex items-center space-x-4">
+          <div className="px-4 py-2 border rounded">
+            <Link to="/about">About </Link>
+          </div>
+
           <a
             href="https://github.com/21Cash/21Cms"
             target="_blank"
@@ -160,13 +169,7 @@ export function Homepage() {
           <AttendanceStatsForm />
         </div>
       </main>
-      <footer className="mt-auto w-full p-6 border-t border-gray-300 dark:border-gray-700">
-        <div className="max-w-5xl mx-auto text-center">
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            &copy; 2025 21CMS by Sushil L.
-          </p>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }
