@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Bar,
   BarChart,
@@ -63,7 +61,6 @@ export function ClassesHorizontalBarChart({
         <ChartContainer config={classesChartConfig}>
           <BarChart data={classesData} layout="vertical" margin={{ top: 20 }}>
             <CartesianGrid horizontal={false} />
-            {/* Hide YAxis since we display course names on the bars */}
             <YAxis dataKey="courseName" type="category" hide />
             <XAxis type="number" hide />
             <ChartTooltip
@@ -75,7 +72,6 @@ export function ClassesHorizontalBarChart({
               fill={classesChartConfig.value.color}
               radius={8}
             >
-              {/* Course name always in black */}
               <LabelList
                 dataKey="courseName"
                 position="insideLeft"
@@ -83,7 +79,6 @@ export function ClassesHorizontalBarChart({
                 className="fill-black"
                 fontSize={15}
               />
-              {/* Value label: black in light mode, white in dark mode */}
               <LabelList
                 dataKey="value"
                 position="right"
@@ -95,14 +90,11 @@ export function ClassesHorizontalBarChart({
           </BarChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex-col items-start gap-2 text-sm">
-        {/* Optional footer content */}
-      </CardFooter>
+      <CardFooter className="flex-col items-start gap-2 text-sm"></CardFooter>
     </Card>
   );
 }
 
-// Example usage with dummy data
 export function ExampleUsage() {
   return (
     <ClassesHorizontalBarChart

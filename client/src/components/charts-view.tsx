@@ -5,6 +5,8 @@ import axios from "axios";
 import { backendUrl } from "@/constants";
 import { CoursesData } from "@shared/types/api-types";
 import LoadingSpinner from "./loading-spinner";
+import { DoubleBarChart } from "./charts/classes-double-bar-chart";
+import { SiteFooter } from "./site-footer";
 
 const fetchCoursesData = async (userId: string) => {
   const response = await axios.get<CoursesData>(
@@ -89,9 +91,9 @@ export function ChartsView({ userId }: { userId: string }) {
       </div>
 
       <div>
-        <StackClassesBarChart
-          label="Class Attendance Overview"
-          durationText="All time"
+        <DoubleBarChart
+          label="Courses Attendance Overview"
+          durationText="Showing courses data all time"
           data={stackChartData}
         />
       </div>

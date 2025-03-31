@@ -1,5 +1,6 @@
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
+"use client";
 
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import {
   Card,
   CardContent,
@@ -27,7 +28,7 @@ export interface StackClassesBarChartProps {
   }[];
 }
 
-const stackChartConfig: ChartConfig = {
+const chartConfig: ChartConfig = {
   classesHeld: {
     label: "Classes Held",
     color: "hsl(var(--chart-1))",
@@ -37,7 +38,8 @@ const stackChartConfig: ChartConfig = {
     color: "hsl(var(--chart-2))",
   },
 } satisfies ChartConfig;
-export function StackClassesBarChart({
+
+export function DoubleBarChart({
   label,
   durationText,
   data,
@@ -49,17 +51,23 @@ export function StackClassesBarChart({
         {durationText && <CardDescription>{durationText}</CardDescription>}
       </CardHeader>
       <CardContent>
-        <ChartContainer config={stackChartConfig}>
-          <BarChart data={data}>
-            <CartesianGrid vertical={false} />
+        <ChartContainer config={chartConfig}>
+          <BarChart
+            data={data}
+            barSize={24}
+            style={{ fontSize: 12 }}
+            margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
+          >
+            <CartesianGrid vertical={false} strokeOpacity={0.3} />
             <XAxis
               dataKey="courseName"
+              axisLine={false}
               tickLine={false}
               tickMargin={10}
-              axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
+              tickFormatter={(value) => value.slice(0, 3).toUpperCase()}
             />
             <ChartTooltip
+              cursor={false}
               content={
                 <ChartTooltipContent
                   labelFormatter={(value) => {
@@ -74,24 +82,17 @@ export function StackClassesBarChart({
             <ChartLegend content={<ChartLegendContent />} />
             <Bar
               dataKey="classesHeld"
-              stackId="a"
               fill="var(--color-classesHeld)"
-              radius={[0, 0, 4, 4]}
+              radius={[4, 4, 4, 4]}
             />
             <Bar
               dataKey="classesPresent"
-              stackId="a"
               fill="var(--color-classesPresent)"
-              radius={[4, 4, 0, 0]}
+              radius={[4, 4, 4, 4]}
             />
           </BarChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="leading-none text-muted-foreground">
-          Showing classes data for all time
-        </div>
-      </CardFooter>
     </Card>
   );
 }
