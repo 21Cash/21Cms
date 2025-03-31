@@ -1,5 +1,4 @@
 import axios from "axios";
-
 import { useEffect, useState } from "react";
 import {
   Card,
@@ -13,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { backendUrl } from "@/constants";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { ModeToggle } from "@/components/ui/mode-toggle";
 
 const RegisterForm = () => {
   const [rollno, setRollno] = useState("");
@@ -53,16 +53,16 @@ const RegisterForm = () => {
   };
 
   return (
-    <Card className="bg-gray-800 border border-gray-700 shadow-xl rounded-lg hover:shadow-2xl transition-shadow">
-      <CardHeader className="border-b border-gray-700">
+    <Card>
+      <CardHeader>
         <CardTitle className="text-center text-2xl font-bold">
           Register Now
         </CardTitle>
-        <CardDescription className="text-center text-gray-300">
+        <CardDescription className="text-center">
           Join 21CMS to unlock exclusive insights.
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-6 p-6">
+      <CardContent>
         <form className="space-y-5" onSubmit={handleSubmit}>
           <Input
             placeholder="Roll Number"
@@ -83,11 +83,7 @@ const RegisterForm = () => {
             onChange={(e) => setPassword(e.target.value)}
             disabled={loading}
           />
-          <Button
-            type="submit"
-            className="w-full bg-gray-600 hover:bg-gray-500 transition-colors py-3"
-            disabled={loading}
-          >
+          <Button type="submit" className="w-full" disabled={loading}>
             {loading ? "Registering..." : "Register"}
           </Button>
         </form>
@@ -100,29 +96,33 @@ const AttendanceStatsForm = () => {
   const [handle, setHandle] = useState("");
   const navigate = useNavigate();
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (handle.trim()) {
+      navigate(`/view/${handle.toLowerCase()}`);
+    } else {
+      toast.error("❌ Please enter a valid user handle.");
+    }
+  };
+
   return (
-    <Card className="bg-gray-800 border border-gray-700 shadow-xl rounded-lg hover:shadow-2xl transition-shadow">
-      <CardHeader className="border-b border-gray-700">
+    <Card>
+      <CardHeader>
         <CardTitle className="text-center text-2xl font-bold">
           View Attendance Stats
         </CardTitle>
-        <CardDescription className="text-center text-gray-300">
+        <CardDescription className="text-center">
           Enter your user handle to check your attendance stats.
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-6 p-6">
-        <form className="space-y-5">
+      <CardContent>
+        <form className="space-y-5" onSubmit={handleSubmit}>
           <Input
             placeholder="User Handle"
             value={handle}
             onChange={(e) => setHandle(e.target.value)}
           />
-          <Button
-            onClick={() => {
-              navigate(`/view/${handle.toLowerCase()}`);
-            }}
-            className="w-full bg-gray-600 hover:bg-gray-500 transition-colors py-3"
-          >
+          <Button type="submit" className="w-full">
             View Stats
           </Button>
         </form>
@@ -133,24 +133,25 @@ const AttendanceStatsForm = () => {
 
 export function Homepage() {
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-gray-850 to-gray-800 text-white">
+    <div className="min-h-screen flex flex-col px-4 text-foreground bg-gradient-to-br from-gray-100 via-gray-200 to-gray-100 dark:from-black dark:via-gray-900 dark:to-black">
       <header className="p-6 flex justify-between items-center">
         <div className="text-3xl font-bold tracking-tight">21CMS</div>
-        <nav>
+        <div className="flex items-center space-x-4">
           <a
             href="https://github.com/21Cash/21Cms"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-4 py-2 border border-gray-500 rounded hover:bg-gray-600 transition-colors"
+            className="px-4 py-2 border rounded"
           >
             Star on GitHub
           </a>
-        </nav>
+          <ModeToggle />
+        </div>
       </header>
-      <main className="flex-1 flex flex-col justify-center items-center px-4 space-y-10">
+      <main className="flex-1 flex flex-col justify-center items-center space-y-10">
         <div className="text-center">
-          <h1 className="text-6xl font-semibold mb-4">Welcome to 21CMS</h1>
-          <p className="text-xl mb-4 max-w-2xl mx-auto">
+          <h1 className="mb-8 text-6xl font-semibold">Welcome to 21CMS</h1>
+          <p className="text-xl max-w-2xl mx-auto">
             Unlock a superior user experience and deeper insights—register now
             for an enhanced UI and comprehensive analytics.
           </p>
@@ -160,8 +161,8 @@ export function Homepage() {
           <AttendanceStatsForm />
         </div>
       </main>
-      <footer className="p-3 text-center border-t border-gray-700">
-        <p className="text-sm text-gray-400">21CMS By Sushil L</p>
+      <footer className="p-3 text-center">
+        <p className="text-sm">21CMS By Sushil L</p>
       </footer>
     </div>
   );
