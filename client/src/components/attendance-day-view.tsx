@@ -51,11 +51,11 @@ export function AttendanceDayView({ date, userId }: AttendanceDayViewProps) {
     );
   }
 
-  const totalClassesHeld =
-    data?.reduce((acc, course) => acc + course.classesHeld, 0) || 0;
-  const totalClassesPresent =
-    data?.reduce((acc, course) => acc + course.classesPresent, 0) || 0;
-  const totalClassesAbsent = totalClassesHeld - totalClassesPresent;
+  const totalPresentDelta =
+    data?.reduce((acc, course) => acc + course.presentDelta, 0) || 0;
+  const totalAbsentDelta =
+    data?.reduce((acc, course) => acc + course.absentDelta, 0) || 0;
+  const totalClassesHeld = totalPresentDelta + totalAbsentDelta;
 
   return (
     <Card className="w-full max-w-4xl mx-auto p-6">
@@ -85,13 +85,13 @@ export function AttendanceDayView({ date, userId }: AttendanceDayViewProps) {
             <span className="block text-sm text-muted-foreground">
               Classes Present
             </span>
-            <span className="font-bold text-2xl">{totalClassesPresent}</span>
+            <span className="font-bold text-2xl">{totalPresentDelta}</span>
           </div>
           <div className="text-center">
             <span className="block text-sm text-muted-foreground">
               Classes Absent
             </span>
-            <span className="font-bold text-2xl">{totalClassesAbsent}</span>
+            <span className="font-bold text-2xl">{totalAbsentDelta}</span>
           </div>
         </div>
 
@@ -102,40 +102,45 @@ export function AttendanceDayView({ date, userId }: AttendanceDayViewProps) {
               No data found
             </div>
           ) : (
-            data.map((course, index) => (
-              <div
-                key={index}
-                className="flex flex-col border rounded-lg p-4 shadow-sm space-y-2"
-              >
-                <div className="flex justify-between items-center">
-                  <span className="font-semibold text-lg">
-                    {course.courseName}{" "}
-                    <span className="text-sm text-muted-foreground">
-                      ({course.courseCode})
+            data
+              .filter(
+                (course) =>
+                  course.presentDelta !== 0 || course.absentDelta !== 0
+              )
+              .map((course, index) => (
+                <div
+                  key={index}
+                  className="flex flex-col border rounded-lg p-4 shadow-sm space-y-2"
+                >
+                  <div className="flex justify-between items-center">
+                    <span className="font-semibold text-lg">
+                      {course.courseName}{" "}
+                      <span className="text-sm text-muted-foreground">
+                        ({course.courseCode})
+                      </span>
                     </span>
-                  </span>
-                  <span className="flex space-x-4">
-                    {course.presentDelta !== 0 && (
-                      <span className="text-green-600 font-medium">
-                        +{course.presentDelta}
-                      </span>
-                    )}
-                    {course.absentDelta !== 0 && (
-                      <span className="text-red-600 font-medium">
-                        -{course.absentDelta}
-                      </span>
-                    )}
-                  </span>
+                    <span className="flex space-x-4">
+                      {course.presentDelta !== 0 && (
+                        <span className="text-green-600 font-medium">
+                          +{course.presentDelta}
+                        </span>
+                      )}
+                      {course.absentDelta !== 0 && (
+                        <span className="text-red-600 font-medium">
+                          -{course.absentDelta}
+                        </span>
+                      )}
+                    </span>
+                  </div>
+                  <div className="text-sm text-muted-foreground flex justify-between">
+                    <span>
+                      Classes Held: {course.presentDelta + course.absentDelta}
+                    </span>
+                    <span>Classes Present: {course.presentDelta}</span>
+                    <span>Classes Absent: {course.absentDelta}</span>
+                  </div>
                 </div>
-                <div className="text-sm text-muted-foreground flex justify-between">
-                  <span>Classes Held: {course.classesHeld}</span>
-                  <span>Present: {course.classesPresent}</span>
-                  <span>
-                    Absent: {course.classesHeld - course.classesPresent}
-                  </span>
-                </div>
-              </div>
-            ))
+              ))
           )}
         </div>
       </CardContent>
