@@ -21,6 +21,7 @@ import { useParams } from "react-router-dom";
 import { UserDashboardData, UserData } from "@shared/types/api-types";
 import { ModeToggle } from "@/components/ui/mode-toggle";
 import { ChartsView } from "@/components/charts-view";
+import LoadingSpinner from "@/components/loading-spinner";
 
 const fetchAttendanceDashboardData = async (userId: string) => {
   const response = await axios.get(`${backendUrl}/get-user-dashboard-data`, {
@@ -64,7 +65,7 @@ export function AttendanceView() {
     enabled: !!userId,
   });
 
-  if (isLoading || isUserLoading) return <div>Loading...</div>;
+  if (isLoading || isUserLoading) return <LoadingSpinner />;
   if (isError || isUserError) return <div>Error fetching data</div>;
 
   return (

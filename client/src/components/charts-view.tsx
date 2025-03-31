@@ -4,6 +4,7 @@ import { StackClassesBarChart } from "./charts/stacked-classes-bar-chart";
 import axios from "axios";
 import { backendUrl } from "@/constants";
 import { CoursesData } from "@shared/types/api-types";
+import LoadingSpinner from "./loading-spinner";
 
 const fetchCoursesData = async (userId: string) => {
   const response = await axios.get<CoursesData>(
@@ -22,7 +23,7 @@ export function ChartsView({ userId }: { userId: string }) {
   });
 
   if (isLoading) {
-    return <div className="p-6 text-center">Loading charts data...</div>;
+    return <LoadingSpinner />;
   }
 
   if (isError) {

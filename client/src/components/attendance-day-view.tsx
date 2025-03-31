@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/card";
 import { backendUrl } from "@/constants";
 import { useQuery } from "@tanstack/react-query";
+import LoadingSpinner from "./loading-spinner";
 
 export type CoursesData = {
   fullAttendanceInfoId: string;
@@ -41,7 +42,7 @@ export function AttendanceDayView({ date, userId }: AttendanceDayViewProps) {
   });
 
   if (isLoading) {
-    return <div className="text-center py-4">Loading...</div>;
+    return <LoadingSpinner />;
   }
 
   if (error) {
