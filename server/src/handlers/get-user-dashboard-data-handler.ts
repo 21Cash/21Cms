@@ -4,13 +4,14 @@ import { getFullAttendanceInfo } from "../database/queries/select-queries/get-fu
 import { getCoursesInfoByDate } from "../database/queries/select-queries/get-courses-infos-on-date";
 import { getAttendanceHistoryData } from "../database/queries/select-queries/get-attendance-history-data";
 import { db } from "../database/db";
+import { getCoursesInfoByFullAttendanceId } from "../database/queries/select-queries/get-courses-info-by-full-attendance-id";
 
 const getUserDashboardDataHandler = async (userId: string) => {
   const { username, lastRefreshed } = await GetUserInfo(userId);
   const currentDate = new Date();
 
   // Get current full attendance info
-  const { totalClassesHeld, totalClassesPresent, attendancePercentage } =
+  const { id, totalClassesHeld, totalClassesPresent, attendancePercentage } =
     await getFullAttendanceInfo({
       userId,
       date: currentDate,
@@ -19,9 +20,8 @@ const getUserDashboardDataHandler = async (userId: string) => {
   const totalClassesAbsent = totalClassesHeld - totalClassesPresent;
 
   // Get today's courses data
-  const todaysCoursesData = await getCoursesInfoByDate({
-    userId,
-    dateString: currentDate.toISOString().split("T")[0],
+  const todaysCoursesData = await getCoursesInfoByFullAttendanceId({
+    fullAttendanceId: id,
   });
 
   // Get attendance history for the past 3 months
