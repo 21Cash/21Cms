@@ -5,7 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { AttendanceChart, AttendanceChartProps } from "./attendance-chart";
+import { AttendanceChart } from "./attendance-chart";
 import { Course, CoursesDetailsTable } from "./courses-details-table";
 import { useEffect, useState } from "react";
 
@@ -148,7 +148,10 @@ export function AttendanceDashboard(props: AttendanceDashboardProps) {
         </div>
         {/* Course Details table */}
         <div className="px-6 py-6">
-          <CoursesDetailsTable courses={coursesData} />
+          <CoursesDetailsTable
+            courses={coursesData}
+            showCourseCodeColumn={false}
+          />
         </div>
       </div>
     </div>

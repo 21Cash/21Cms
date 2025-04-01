@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Card,
   CardContent,
@@ -14,7 +14,6 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { ModeToggle } from "@/components/ui/mode-toggle";
 import { Link } from "react-router-dom";
-import { Footer } from "react-day-picker";
 import { SiteFooter } from "@/components/site-footer";
 
 const RegisterForm = () => {

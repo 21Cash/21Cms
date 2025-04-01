@@ -22,24 +22,35 @@ export interface Course {
 
 interface CoursesDetailsTableProps {
   courses: Course[];
+  showCourseCodeColumn: boolean;
 }
 
-export function CoursesDetailsTable({ courses }: CoursesDetailsTableProps) {
+type HeaderItem = {
+  key: keyof Course;
+  label: string;
+};
+
+export function CoursesDetailsTable({
+  courses,
+  showCourseCodeColumn = true,
+}: CoursesDetailsTableProps) {
   const [sortBy, setSortBy] = useState<keyof Course | null>(null);
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
 
-  const headers = useMemo(
-    () =>
-      [
-        { key: "courseName", label: "Course Name" },
-        { key: "courseCode", label: "Course Code" },
-        { key: "courseAttendancePercent", label: "Attendance %" },
-        { key: "courseClassesHeld", label: "Classes Held" },
-        { key: "courseClassesPresent", label: "Classes Present" },
-        { key: "courseClassesAbsent", label: "Classes Absent" },
-      ] as const,
-    []
-  );
+  const headers = useMemo<HeaderItem[]>(() => {
+    const baseHeaders: HeaderItem[] = [
+      { key: "courseName", label: "Course Name" },
+      { key: "courseAttendancePercent", label: "Attendance %" },
+      { key: "courseClassesHeld", label: "Classes Held" },
+      { key: "courseClassesPresent", label: "Classes Present" },
+      { key: "courseClassesAbsent", label: "Classes Absent" },
+    ];
+    if (showCourseCodeColumn) {
+      // Insert Course Code column after Course Name
+      baseHeaders.splice(1, 0, { key: "courseCode", label: "Course Code" });
+    }
+    return baseHeaders;
+  }, [showCourseCodeColumn]);
 
   const sortedCourses = useMemo(() => {
     if (!sortBy) return courses;
@@ -103,12 +114,13 @@ export function CoursesDetailsTable({ courses }: CoursesDetailsTableProps) {
           {sortedCourses.map((course, index) => (
             <TableRow key={index}>
               <TableCell>{course.courseName}</TableCell>
-              <TableCell>{course.courseCode || course.courseName}</TableCell>
+              {showCourseCodeColumn && (
+                <TableCell>{course.courseCode || course.courseName}</TableCell>
+              )}
               <TableCell>{course.courseAttendancePercent}%</TableCell>
               <TableCell>
                 {course.courseClassesHeld}
-                {(course.coursePresentDelta || course.courseAbsentDelta) >
-                  0 && (
+                {course.coursePresentDelta + course.courseAbsentDelta > 0 && (
                   <span className="text-gray-500">
                     {" "}
                     (+{course.coursePresentDelta + course.courseAbsentDelta})
