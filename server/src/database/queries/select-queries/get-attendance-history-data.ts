@@ -29,7 +29,8 @@ export const getAttendanceHistoryData = async ({
         lte(fullAttendanceInfos.date, getPostgresqlDateStringIST(endDateUTC)),
         eq(fullAttendanceInfos.userId, userId)
       )
-    );
+    )
+    .orderBy(fullAttendanceInfos.date);
 
   const processedData = data.map((item) => {
     return { ...item, classesAbsent: item.classesHeld - item.classesPresent };
