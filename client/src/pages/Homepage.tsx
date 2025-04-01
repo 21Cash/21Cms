@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -96,12 +96,37 @@ const RegisterForm = () => {
 
 const AttendanceStatsForm = () => {
   const [handle, setHandle] = useState("");
+  const [suggestions, setSuggestions] = useState<string[]>([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedSuggestions = localStorage.getItem("handleSuggestions");
+    const lastEntered = localStorage.getItem("lastHandle");
+
+    if (storedSuggestions) {
+      setSuggestions(JSON.parse(storedSuggestions));
+    }
+
+    if (lastEntered) {
+      setHandle(lastEntered);
+    }
+  }, []);
+
+  const updateSuggestions = (newHandle: string) => {
+    if (!suggestions.includes(newHandle)) {
+      const newSuggestions = [...suggestions, newHandle];
+      setSuggestions(newSuggestions);
+      localStorage.setItem("handleSuggestions", JSON.stringify(newSuggestions));
+    }
+    localStorage.setItem("lastHandle", newHandle);
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (handle.trim()) {
-      navigate(`/view/${handle.toLowerCase()}`);
+      const normalizedHandle = handle.toLowerCase();
+      updateSuggestions(normalizedHandle);
+      navigate(`/view/${normalizedHandle}`);
     } else {
       toast.error("❌ Please enter a valid user handle.");
     }
@@ -123,7 +148,16 @@ const AttendanceStatsForm = () => {
             placeholder="Roll Number"
             value={handle}
             onChange={(e) => setHandle(e.target.value)}
+            onClick={() => setHandle("")}
+            autoComplete="on"
+            list="handle-suggestions"
           />
+          {/* Datalist element provides suggestions */}
+          <datalist id="handle-suggestions">
+            {suggestions.map((suggestion, index) => (
+              <option key={index} value={suggestion} />
+            ))}
+          </datalist>
           <Button type="submit" className="w-full">
             View Stats
           </Button>
@@ -132,6 +166,9 @@ const AttendanceStatsForm = () => {
     </Card>
   );
 };
+
+export default AttendanceStatsForm;
+
 export function Homepage() {
   return (
     <div className="min-h-screen flex flex-col px-4 text-foreground bg-gradient-to-br from-gray-100 via-gray-200 to-gray-100 dark:from-black dark:via-gray-900 dark:to-black">
