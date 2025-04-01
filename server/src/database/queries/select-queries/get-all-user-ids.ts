@@ -6,12 +6,10 @@ const getAllUserIds = async () => {
     .select({
       userId: users.userId,
     })
-    .from(users);
-  const userIdsList = userIds.map((item) => {
-    return item.userId;
-  });
+    .from(users)
+    .orderBy(users.lastRefreshed);
 
-  return userIdsList;
+  return userIds.map((item) => item.userId);
 };
 
 export { getAllUserIds };
