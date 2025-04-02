@@ -46,14 +46,21 @@ export function CoursesDetailsTable({
       { key: "courseClassesAbsent", label: "Classes Absent" },
     ];
     if (showCourseCodeColumn) {
-      // Insert Course Code column after Course Name
       baseHeaders.splice(1, 0, { key: "courseCode", label: "Course Code" });
     }
     return baseHeaders;
   }, [showCourseCodeColumn]);
 
   const sortedCourses = useMemo(() => {
-    if (!sortBy) return courses;
+    if (!sortBy) {
+      return [...courses].sort((a, b) => {
+        const aHasDelta =
+          a.coursePresentDelta > 0 || a.courseAbsentDelta > 0 ? 1 : 0;
+        const bHasDelta =
+          b.coursePresentDelta > 0 || b.courseAbsentDelta > 0 ? 1 : 0;
+        return bHasDelta - aHasDelta;
+      });
+    }
     return [...courses].sort((a, b) => {
       let aValue: string | number;
       let bValue: string | number;

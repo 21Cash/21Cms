@@ -33,20 +33,19 @@ const RegisterForm = () => {
         password,
       });
 
-      if (response.status !== 200) throw new Error("Registration failed");
-
       toast.success("✅ Registration Successful!", {
-        description: "You can now log in to your account.",
-        duration: 4000,
+        description: `Rollno: ${response.data.userId} registered, It may take upto 30 minutes before you can start accessing your stats page`,
+        duration: 6000,
       });
 
       setRollno("");
       setUsername("");
       setPassword("");
     } catch (error) {
-      console.error(error);
-      toast.error("❌ Registration Failed", {
-        description: "Please check your credentials and try again.",
+      const errorMsg = axios.isAxiosError(error)
+        ? error.response?.data?.msg ?? "Unexpected Error Occurred"
+        : "Unexpected Error Occurred";
+      toast.error(`❌ ${errorMsg}`, {
         duration: 4000,
       });
     } finally {

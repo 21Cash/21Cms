@@ -35,7 +35,9 @@ const tryLogin = async (
     );
     return { userId, password, username };
   } catch (error) {
-    throw new Error("Failed to Login or Login timedout");
+    throw new Error(
+      "Failed to Login with the given credentials, recheck the credentials provided."
+    );
   }
 };
 

@@ -12,7 +12,7 @@ const addUser = async ({
   userId,
   username,
   password,
-}: UserProps): Promise<User> => {
+}: UserProps): Promise<{ userId: string; username: string }> => {
   const user = {
     userId,
     username,
@@ -23,7 +23,10 @@ const addUser = async ({
     .insert(users)
     .values({ ...user, lastRefreshed: new Date() })
     .onConflictDoNothing()
-    .returning();
+    .returning({
+      userId: users.userId,
+      username: users.username,
+    });
 
   if (result.length === 0) {
     throw new Error(`User with id ${userId} already exists`);

@@ -64,6 +64,15 @@ export function AttendanceChart({ attendanceData }: AttendanceChartProps) {
     return date >= startDate && date <= referenceDate;
   });
 
+  const attendanceValues = filteredData.map((item) => item.attendance);
+  const minAttendance = Math.min(...attendanceValues);
+  const maxAttendance = Math.max(...attendanceValues);
+  const padding = (maxAttendance - minAttendance) * 0.05 || 5;
+
+  const yDomain = [
+    Math.max(0, minAttendance - padding),
+    Math.min(100, maxAttendance + padding),
+  ];
   return (
     <Card>
       <CardHeader className="flex items-center gap-2 space-y-0 border-b sm:flex-row">
@@ -130,7 +139,8 @@ export function AttendanceChart({ attendanceData }: AttendanceChartProps) {
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              domain={[60, 100]} // y-range
+              domain={yDomain}
+              tickFormatter={(value) => value.toFixed(2)}
             />
             <ChartTooltip
               cursor={false}
