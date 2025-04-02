@@ -34,12 +34,19 @@ const triggerFullInfoUpdateOnUser = async ({
   triggerDate, // In UTC
 }: FullInfoUpdateProps) => {
   if (!userId) {
-    throw new Error("userId is required");
+    console.log(`UserId not truthy to update Info`);
+    return;
   }
 
   console.log(`Triggering Full Info Update for ${userId}`);
 
-  const password = (await GetUserInfo(userId)).password;
+  const userInfo = await GetUserInfo(userId);
+  if (!userInfo) {
+    console.log(`UserInfo with userId:${userId} Not Found`);
+    return;
+  }
+
+  const password = userInfo.password;
 
   // Fetch Current day stats
   const currentDayAttendanceData = await fetchAttendanceData(userId, password);

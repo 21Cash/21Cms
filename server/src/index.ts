@@ -4,6 +4,7 @@ import rootRoute from "./routes/root";
 import express from "express";
 import registerUserRoute from "./routes/register-user";
 import triggerFullAttendanceUpdateOnAllRoute from "./routes/trigger-full-attendance-update-on-all";
+import triggerFullAttendanceUpdateOnUserRoute from "./routes/trigger-full-attendance-update-on-user";
 import {
   chromeExecutablePath,
   frontendUrl,
@@ -46,6 +47,10 @@ const init = async () => {
   app.use(
     "/trigger-full-attendance-update-on-all",
     triggerFullAttendanceUpdateOnAllRoute
+  );
+  app.use(
+    "/trigger-full-attendance-update-on-user",
+    triggerFullAttendanceUpdateOnUserRoute
   );
   app.use("/get-user-dashboard-data", getUserDashboardDataRoute);
   app.use("/get-user-courses-data-on-date", getCoursesDataOnDateRoute);
