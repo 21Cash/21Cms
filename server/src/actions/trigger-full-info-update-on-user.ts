@@ -38,8 +38,6 @@ const triggerFullInfoUpdateOnUser = async ({
     return;
   }
 
-  console.log(`Triggering Full Info Update for ${userId}`);
-
   const userInfo = await GetUserInfo(userId);
   if (!userInfo) {
     console.log(`UserInfo with userId:${userId} Not Found`);
@@ -116,8 +114,6 @@ const triggerFullInfoUpdateOnUser = async ({
 
   const currentDate = new Date();
   await setUserLastRefresh({ userId, refreshedDate: currentDate });
-
-  console.log(`Full Info Update Complete for ${userId}`);
 };
 
 export { triggerFullInfoUpdateOnUser };

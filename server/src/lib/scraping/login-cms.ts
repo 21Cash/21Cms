@@ -6,9 +6,6 @@ const loginIntoCMS = async (
   username: string,
   password: string
 ): Promise<Page | null> => {
-  console.log(
-    `Trying to log in with username: ${username} and password: ${password} on cmsUrl: ${cmsUrl}`
-  );
   if (!browser) {
     console.log(`Browser is not initialized`);
     return;

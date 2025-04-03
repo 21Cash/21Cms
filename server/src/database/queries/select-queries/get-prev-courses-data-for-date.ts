@@ -29,9 +29,6 @@ const getPrevCoursesDataForDate = async ({ userId, dateInUTC }) => {
     return [];
   }
   const prevDateString = result[0].date;
-  console.log(
-    `PrevFullAttendanceId for userId: ${userId}, prevISTDateString: ${prevDateString}`
-  );
 
   return getCoursesInfoByDate({ userId, dateString: prevDateString });
 };

@@ -6,7 +6,8 @@ import { GetUserInfo } from "../database/queries/select-queries/get-user-info";
 import tryLogin from "../lib/scraping/try-login";
 
 const registerUserHandler = async (userProps: UserProps) => {
-  const { userId, password, username } = userProps;
+  const { password, username } = userProps;
+  const userId = userProps.userId.toLowerCase();
 
   const userAlreadyPresent = !!(await GetUserInfo(userId));
   if (userAlreadyPresent) {
