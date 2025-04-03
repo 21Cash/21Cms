@@ -8,6 +8,7 @@ interface UserInfo {
   password: string;
 }
 
+// TODO: Use another browser to validate credentials by logging in so that when full-update-infos are being triggered, this login doesn't interfere
 const tryLogin = async (
   userId: string,
   password: string
@@ -38,6 +39,10 @@ const tryLogin = async (
     throw new Error(
       "Failed to Login with the given credentials, recheck the credentials provided."
     );
+  } finally {
+    if (page) {
+      await page.close();
+    }
   }
 };
 

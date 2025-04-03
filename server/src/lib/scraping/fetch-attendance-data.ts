@@ -147,6 +147,10 @@ const fetchAttendanceData = async (
     console.log("Failed to extract attendance data");
     await page.close();
     throw error;
+  } finally {
+    if (page) {
+      await page.close();
+    }
   }
 };
 
