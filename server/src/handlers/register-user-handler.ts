@@ -7,7 +7,7 @@ import tryLogin from "../lib/scraping/try-login";
 
 const registerUserHandler = async (userProps: UserProps) => {
   const { password, username } = userProps;
-  const userId = userProps.userId.toLowerCase();
+  const userId = userProps.userId.toLowerCase().trim();
 
   const userAlreadyPresent = !!(await GetUserInfo(userId));
   if (userAlreadyPresent) {
