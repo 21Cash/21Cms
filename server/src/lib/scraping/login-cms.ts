@@ -8,16 +8,22 @@ const loginIntoCMS = async (
 ): Promise<Page | null> => {
   if (!browser) {
     console.log(`Browser is not initialized`);
-    return;
+    return null;
   }
 
   const page = await browser.newPage();
 
-  await page.goto(cmsUrl, { waitUntil: "networkidle2" });
+  await page.goto(cmsUrl, { waitUntil: "domcontentloaded" });
 
-  await page.type("#txt_login", username);
-  await page.type("#txt_pswd", password);
-  await page.click("#btnsubmit");
+  await page.evaluate(
+    (user, pass) => {
+      (document.querySelector("#txt_login") as HTMLInputElement).value = user;
+      (document.querySelector("#txt_pswd") as HTMLInputElement).value = pass;
+      (document.querySelector("#btnsubmit") as HTMLButtonElement)?.click();
+    },
+    username,
+    password
+  );
 
   try {
     await page.waitForSelector("#tr1My", { timeout: 5000 });
