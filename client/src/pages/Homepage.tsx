@@ -171,7 +171,7 @@ export default AttendanceStatsForm;
 export function Homepage() {
   return (
     <div className="min-h-screen flex flex-col px-4 text-foreground bg-gradient-to-br from-gray-100 via-gray-200 to-gray-100 dark:from-black dark:via-gray-900 dark:to-black">
-      <header className="sm:pl-1 md:pl-3 sm: pr-1 md:pr-6 py-6 flex justify-between items-center">
+      <header className="p-6 flex justify-between items-center">
         <div className="text-3xl font-bold tracking-tight">
           <Link to="">21CMS</Link>
         </div>
