@@ -7,23 +7,23 @@ const loginIntoCMS = async (
   password: string
 ): Promise<Page | null> => {
   if (!browser) {
-    console.log(`Browser is not initialized`);
-    return;
+    console.log("Browser is not initialized");
+    return null;
   }
 
   const page = await browser.newPage();
 
-  await page.goto(cmsUrl, { waitUntil: "networkidle2" });
-
-  await page.type("#txt_login", username);
-  await page.type("#txt_pswd", password);
-  await page.click("#btnsubmit");
-
   try {
+    await page.goto(cmsUrl, { waitUntil: "networkidle2" });
+    await page.type("#txt_login", username);
+    await page.type("#txt_pswd", password);
+    await page.click("#btnsubmit");
+
     await page.waitForSelector("#tr1My", { timeout: 5000 });
     return page;
   } catch (error) {
-    console.log("Login failed or timed out");
+    console.error("Login failed or encountered an error:", error);
+    await page.close();
     return null;
   }
 };
