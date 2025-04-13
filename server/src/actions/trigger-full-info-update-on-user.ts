@@ -1,6 +1,5 @@
 import { date } from "drizzle-orm/mysql-core";
 import { db } from "../database/db";
-import { getFullAttendanceInfo } from "../database/queries/select-queries/get-full-attendance-info";
 import { GetUserInfo } from "../database/queries/select-queries/get-user-info";
 import { courseAttendanceInfos, fullAttendanceInfos } from "../database/schema";
 import fetchAttendanceData from "../lib/scraping/fetch-attendance-data";

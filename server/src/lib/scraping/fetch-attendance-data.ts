@@ -107,9 +107,6 @@ const fetchAttendanceData = async (
 
       let coursesAttendanceData: CourseData[] = [];
 
-      console.log(`Held Length: ${courseClassesHeldData.length}`);
-      console.log(`Present Len: ${cells.length}`);
-
       cells.forEach((cell) => {
         const presentClassesCount =
           cell.textContent === "" ? 0 : parseInt(cell.textContent);
