@@ -1,16 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { ClassesBarChart } from "./charts/classes-bar-chart";
-import { StackClassesBarChart } from "./charts/stacked-classes-bar-chart";
 import axios from "axios";
 import { backendUrl } from "@/constants";
 import { CoursesData } from "@shared/types/api-types";
 import LoadingSpinner from "./loading-spinner";
 import { DoubleBarChart } from "./charts/classes-double-bar-chart";
-import { SiteFooter } from "./site-footer";
 
 const fetchCoursesData = async (userId: string) => {
   const response = await axios.get<CoursesData>(
-    `${backendUrl}/get-user-courses-data-on-date`,
+    `${backendUrl}/get-latest-courses-data`,
     {
       params: { userId, dateString: new Date().toDateString() },
     }
