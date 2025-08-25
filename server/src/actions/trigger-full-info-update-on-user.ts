@@ -48,6 +48,15 @@ const triggerFullInfoUpdateOnUser = async ({
   // Fetch Current day stats
   const currentDayAttendanceData = await fetchAttendanceData(userId, password);
 
+  // Remove Duplicate courses data from current day attendance data
+  // If multiple courses have same name, consider last one.
+  currentDayAttendanceData.coursesData = Object.values(
+    currentDayAttendanceData.coursesData.reduce((acc, course) => {
+      acc[course.course] = course;
+      return acc;
+    }, {} as Record<string, (typeof currentDayAttendanceData.coursesData)[number]>)
+  );
+
   // Getting Previous Day Courses Data
   const prevDayCoursesInfo = await getPrevCoursesDataForDate({
     userId,
