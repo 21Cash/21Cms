@@ -23,12 +23,9 @@ app.use(express.json());
 
 const init = async () => {
   const isHeadless = useHeadlessBrowser;
-  const BROWSER_WS =
-    "wss://brd-customer-hl_b2696893-zone-cms_scraper:rdqb2x0n1sx1@brd.superproxy.io:9222";
   browser = await puppeteer.launch({
     headless: isHeadless,
     executablePath: chromeExecutablePath,
-    browserWSEndpoint: BROWSER_WS,
   });
 
   app.use(
